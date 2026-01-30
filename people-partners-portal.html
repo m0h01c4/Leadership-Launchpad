@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>People Partner Portal | Leadership Launchpad</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="header-title">
+                <h1>People Partner Portal</h1>
+            </div>
+            <button class="portal-btn" onclick="logout()">Logout</button>
+        </div>
+    </header>
+
+    <!-- Welcome Banner -->
+    <section class="welcome-banner">
+        <div class="welcome-container">
+            <h2 class="welcome-title">Welcome, People Partners!</h2>
+            <p class="welcome-message">You are the compass that guides associates to grow and develop. As a People Partner, you're instrumental in shaping the leadership culture, supporting career advancement, and unlocking the potential within your teams. Together, we build leaders who drive excellence and create lasting impact.</p>
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section class="calendar-section">
+        <div class="calendar-container">
+            <h2 class="calendar-title">2026 Calendar & Important Dates</h2>
+            <p class="calendar-subtitle">Keep track of key dates and leadership initiatives throughout the year</p>
+            <table class="calendar-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Event</th>
+                        <th>Type</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>February 9, 2026</td>
+                        <td>Emerging Leaders Academy - Session 1</td>
+                        <td>Academy Class</td>
+                    </tr>
+                    <tr>
+                        <td>February 15, 2026</td>
+                        <td>Manager Development Program Registration Deadline</td>
+                        <td>Registration Deadline</td>
+                    </tr>
+                    <tr>
+                        <td>February 20, 2026</td>
+                        <td>Effective Feedback Workshop</td>
+                        <td>Workshop</td>
+                    </tr>
+                    <tr>
+                        <td>March 2, 2026</td>
+                        <td>Performance & Talent Planning Academy</td>
+                        <td>Academy Class</td>
+                    </tr>
+                    <tr>
+                        <td>March 8, 2026</td>
+                        <td>Difficult Conversations Workshop</td>
+                        <td>Workshop</td>
+                    </tr>
+                    <tr>
+                        <td>March 15, 2026</td>
+                        <td>Leader Academy Registration Deadline</td>
+                        <td>Registration Deadline</td>
+                    </tr>
+                    <tr>
+                        <td>March 23, 2026</td>
+                        <td>Building Psychological Safety Workshop</td>
+                        <td>Workshop</td>
+                    </tr>
+                    <tr>
+                        <td>April 5, 2026</td>
+                        <td>Strategic Leadership Academy - Session 1</td>
+                        <td>Academy Class</td>
+                    </tr>
+                    <tr>
+                        <td>April 12, 2026</td>
+                        <td>Talent Development Program Registration Deadline</td>
+                        <td>Registration Deadline</td>
+                    </tr>
+                    <tr>
+                        <td>April 18, 2026</td>
+                        <td>Diversity & Inclusion in Leadership Workshop</td>
+                        <td>Workshop</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Mission Control Section -->
+    <section id="mission-control" class="mission-section">
+        <div class="mission-container">
+            <h2 class="mission-title">Mission Control</h2>
+            <p class="mission-note">Click buttons to learn more.</p>
+            
+            <!-- Mission Buttons with Content Tiles -->
+            <div class="mission-buttons-section">
+                <h3 class="section-title">Communication Resources</h3>
+                <div class="mission-buttons">
+                <button class="dashboard-btn active" onclick="window.open('TAP.pdf', '_blank')">
+                    <div class="btn-content">
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <h3>TAP</h3>
+                                </div>
+                                <div class="flip-card-back">
+                                    <ul class="flip-links">
+                                        <li><a href="TAP.pdf" target="_blank">TAP PDF</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+                <button class="dashboard-btn" onclick="openImageModal('Roadmap.jpg')">
+                    <div class="btn-content">
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <h3>Roadmap</h3>
+                                </div>
+                                <div class="flip-card-back">
+                                    <ul class="flip-links">
+                                        <li><a href="#" onclick="openImageModal('Roadmap.jpg'); return false;">View Roadmap</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+                <button class="dashboard-btn">
+                    <div class="btn-content">
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <h3>Templates</h3>
+                                </div>
+                                <div class="flip-card-back">
+                                    <ul class="flip-links">
+                                        <li><a href="mailto:?subject=Your%20Role%20in%20the%20Experience%20Leadership%20Development%20Program&body=Hi%20Leaders%2C%0A%0AAs%20part%20of%20our%20continued%20commitment%20to%20growing%20strong%2C%20capable%20leaders%20across%20Experience%2C%20we%20are%20introducing%20a%20more%20structured%20and%20data-driven%20approach%20to%20leadership%20development.%20I%20want%20to%20share%20the%20%22why%22%20behind%20the%20program%2C%20what%20you%20can%20expect%2C%20and%20the%20important%20role%20you%20play%20in%20shaping%20future%20development%20experiences%20for%20your%20teams.%0A%0AWhy%20This%20Matters%0ALeader%20Academy%20is%20a%20critical%20milestone%20in%20preparing%20our%20leaders%20for%20success%E2%80%94but%20the%20development%20shouldn%27t%20stop%20when%20the%20Academy%20session%20ends.%20To%20better%20support%20leaders%20after%20they%20complete%20Academy%2C%20we%20are%20implementing%20a%20streamlined%20feedback%20process%20that%20helps%20us%20understand%20what%27s%20working%2C%20where%20skill%20gaps%20remain%2C%20and%20what%20additional%20support%20leaders%20may%20need.%0A%0AYour%20insights%20as%20a%20leader%20provide%20a%20meaningful%20lens%20into%20how%20your%20associates%20apply%20what%20they%20learned%2C%20how%20prepared%20they%20are%20for%20their%20roles%2C%20and%20what%20follow-up%20development%20can%20help%20them%20be%20even%20more%20successful.%0A%0AYour%20Role%0A90%20days%20after%20your%20associate%20attends%20Leader%20Academy%2C%20you%20will%20receive%20a%20short%20follow-up%20survey%20to%20capture%20your%20observations%20and%20feedback%20on%20their%20learning.%0A%0AThis%20survey%20will%20come%20to%20you%20directly%20via%20email%2C%20and%20it%20will%20also%20be%20available%20at%20any%20time%20on%20the%20Leadership%20Launchpad.%20The%20survey%20only%20takes%20a%20few%20minutes%20but%20has%20a%20significant%20impact%20on%20identifying%20the%20leadership%20development%20needs%20across%20the%20Experience%20Organization.%0A%0AWhat%20Is%20the%20Leadership%20Launchpad%3F%0AThe%20Leadership%20Launchpad%20is%20our%20new%20centralized%20hub%20designed%20to%20support%20leaders%20throughout%20their%20career.%20This%20hub%20will%20include%20links%20to%20current%20enterprise%20sites%20%28i.e.%2C%20me%40campus%29%2C%20post-Academy%20Survey%20data%2C%20and%20other%20self-guided%20resources.%0A%0AWhat%27s%20Ahead%20Next%20Year%0ATo%20create%20a%20seamless%2C%20year-round%20development%20journey%2C%20here%20is%20what%20you%20can%20expect%20from%20the%20program%20in%20the%20upcoming%20cycle%3A%0A%E2%80%A2%20Quarterly%20development%20themes%20based%20on%20Performance%20calibrations%2C%20AES%20insights%2C%20Talent%20Review%20feedback%2C%20and%20Leader%20Academy%20Post-Survey%20data%20that%20lead%20to%20targeted%20workshops%20and%20learning%20experiences.%0A%E2%80%A2%20Regular%20updates%20provided%20by%20your%20People%20Partners%20on%20quarterly%20focused%20content%20that%20is%20rolling%20out.%0A%0AThank%20you%20for%20helping%20us%20build%20a%20stronger%20leadership%20foundation%20for%20our%20teams.%20Your%20feedback%20and%20engagement%20are%20essential%20to%20creating%20meaningful%20development%20experiences%20that%20truly%20make%20a%20difference.%0A%0AIf%20you%20have%20questions%20about%20the%20Leadership%20Launchpad%20or%20your%20responsibilities%20in%20the%20process%2C%20please%20reach%20out%E2%80%94we%27re%20here%20to%20help.">Email to Leaders</a></li>
+                                        <li><a href="mailto:?subject=90-Day%20Leadership%20Training%20Follow-Up%20Survey&body=Hello%20Leader%2C%0A%0AIt%20has%20been%2090%20days%20since%20your%20associate%20completed%20leadership%20training.%20We%20are%20requesting%20your%20support%20in%20completing%20a%20brief%20follow-up%20survey%20to%20help%20us%20understand%20the%20impact%20of%20the%20training.%0A%0AYour%20perspective%20as%20a%20leader%20is%20invaluable.%20Your%20insights%20provide%20meaningful%20context%20into%20how%20associates%20are%20applying%20what%20they%20learned%2C%20their%20readiness%20for%20their%20roles%2C%20and%20the%20types%20of%20follow-up%20development%20that%20may%20further%20support%20their%20success.%0A%0AThe%20survey%20should%20take%20only%20a%20few%20minutes%20to%20complete%2C%20and%20your%20feedback%20will%20help%20inform%20future%20development%20efforts%20and%20ensure%20we%20continue%20to%20strengthen%20our%20leadership%20pipeline.%0A%0AThank%20you%20in%20advance%20for%20your%20time%20and%20partnership.">Survey Email</a></li>
+                                        <li><a href="FAQs.pdf" target="_blank" download>FAQs</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </button>
+            </div>
+                </div>
+            </div>
+
+            <!-- Self Development Section -->
+            <div class="mission-buttons-section">
+                <h3 class="section-title">People Partner Data Hub</h3>
+                <div class="self-dev-rectangles">
+                    <a href="#" style="text-decoration: none;">
+                        <button class="rect-btn">Leadership Academy Roster</button>
+                    </a>
+                    <a href="#" style="text-decoration: none;">
+                        <button class="rect-btn">Academy Participant Query</button>
+                    </a>
+                    <a href="#" style="text-decoration: none;">
+                        <button class="rect-btn">Available Workshops</button>
+                    </a>
+                </div>
+                
+                <!-- Training Attended Chart -->
+                <div class="chart-container">
+                    <h3 class="chart-title">Training Attended</h3>
+                    <canvas id="trainingChart"></canvas>
+                </div>
+
+                <!-- Effectiveness Chart -->
+                <div class="chart-container">
+                    <h3 class="chart-title">How Effective Was the Training?</h3>
+                    <canvas id="effectivenessChart"></canvas>
+                </div>
+
+                <!-- Training Needs Chart -->
+                <div class="chart-container">
+                    <h3 class="chart-title">Areas Requiring Further Training</h3>
+                    <canvas id="trainingNeedsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Image Modal -->
+    <div id="imageModal" class="modal">
+        <span class="close" onclick="closeImageModal()">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        // Image Modal Functions
+        function openImageModal(imageSrc) {
+          const modal = document.getElementById('imageModal');
+          const modalImage = document.getElementById('modalImage');
+          modalImage.src = imageSrc;
+          modal.style.display = 'block';
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+          const modal = document.getElementById('imageModal');
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside the image
+        window.addEventListener('click', function(event) {
+          const modal = document.getElementById('imageModal');
+          if (event.target === modal) {
+            closeImageModal();
+          }
+        });
+
+        // Close modal with Escape key
+        window.addEventListener('keydown', function(event) {
+          if (event.key === 'Escape') {
+            closeImageModal();
+          }
+        });
+
+        // Logout function
+        function logout() {
+          if (confirm('Are you sure you want to logout?')) {
+            window.location.href = 'index.html';
+          }
+        }
+    </script>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+        // Fetch survey data and create charts
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('./surveyData.json?cache=' + Date.now())
+                .then(response => response.json())
+                .then(data => {
+                    createTrainingChart(data);
+                    createEffectivenessChart(data);
+                    createTrainingNeedsChart(data);
+                })
+                .catch(error => console.error('Error loading survey data:', error));
+        });
+
+        // Training Attended Doughnut Chart
+        function createTrainingChart(data) {
+            const ctx = document.getElementById('trainingChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['New Leaders', 'Leading Individual Contributors', 'Leading Leaders'],
+                    datasets: [{
+                        data: [
+                            data.trainingAttended.newLeaders,
+                            data.trainingAttended.leadingIndividualContributors,
+                            data.trainingAttended.leadingLeaders
+                        ],
+                        backgroundColor: [
+                            '#5B7FFF',
+                            '#FF1493',
+                            '#20B2AA'
+                        ],
+                        borderColor: [
+                            '#4A6BE6',
+                            '#E60D7B',
+                            '#1A9A8F'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'left',
+                            labels: {
+                                font: { size: 14, weight: '600' },
+                                padding: 20,
+                                color: '#333',
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Effectiveness Rating Bar Chart
+        function createEffectivenessChart(data) {
+            const ctx = document.getElementById('effectivenessChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Very Effective', 'Somewhat Effective', 'Neutral', 'Somewhat Ineffective', 'Neither'],
+                    datasets: [{
+                        label: 'Responses',
+                        data: [
+                            data.effectiveness.veryEffective,
+                            data.effectiveness.somewhatEffective,
+                            data.effectiveness.neutral,
+                            data.effectiveness.somewhatIneffective,
+                            data.effectiveness.neitherEffectiveNorIneffective
+                        ],
+                        backgroundColor: [
+                            '#2DB84B',
+                            '#5B7FFF',
+                            '#FFB820',
+                            '#FF8C42',
+                            '#FF1493'
+                        ],
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Training Needs Horizontal Bar Chart
+        function createTrainingNeedsChart(data) {
+            const ctx = document.getElementById('trainingNeedsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Communication', 'Decision-making', 'Team Building', 'Conflict Resolution', 'Strategic Thinking', 'Other'],
+                    datasets: [{
+                        label: 'Number of Selections',
+                        data: [
+                            data.trainingNeeds.communication,
+                            data.trainingNeeds.decisionMaking,
+                            data.trainingNeeds.teamBuilding,
+                            data.trainingNeeds.conflictResolution,
+                            data.trainingNeeds.strategicThinking,
+                            data.trainingNeeds.other
+                        ],
+                        backgroundColor: [
+                            '#0066CC',
+                            '#5B7FFF',
+                            '#FF1493',
+                            '#20B2AA',
+                            '#FFB820',
+                            '#FF8C42'
+                        ],
+                        borderRadius: 8,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+
