@@ -755,7 +755,7 @@ body {
 
 .mission-circles {
   display: grid;
-  grid-template-columns: repeat(4, 250px);
+  grid-template-columns: repeat(4, 300px);
   gap: 15px;
   padding: 40px 0;
   justify-content: center;
@@ -769,8 +769,8 @@ body {
   padding: 0;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 250px;
-  height: 250px;
+  width: 300px;
+  height: 300px;
   position: relative;
   overflow: hidden;
   box-shadow: 
