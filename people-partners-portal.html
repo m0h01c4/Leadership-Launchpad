@@ -211,6 +211,30 @@
     </div>
 
     <script>
+        // Authentication Check
+        // Redirect to index.html if accessed directly without proper authentication
+        (function checkAuth() {
+          const validUserIDs = {
+            'K0J0ELD': 'Anna Jonston',
+            'M0H01C4': 'Michelle Acevedo',
+            'C0H0Q44': 'Cassidy Hodges',
+            'K0R0K1D': 'Kevin Reese',
+            'NSKIDMO': 'Nathan Skidmore',
+            'C0W06X5': 'Carey Webb',
+            'ALM00C2': 'Amanda Murphy',
+            'SCMASTE': 'Sondra Masters',
+            'KMCNEI2': 'Kelly McNeill'
+          };
+          
+          // Get authenticated user from sessionStorage
+          const authenticatedUser = sessionStorage.getItem('authenticatedUser');
+          
+          // If no authenticated user or user is not valid, redirect to index
+          if (!authenticatedUser || !validUserIDs[authenticatedUser]) {
+            window.location.href = 'index.html';
+          }
+        })();
+
         // Image Modal Functions
         function openImageModal(imageSrc) {
           const modal = document.getElementById('imageModal');
@@ -244,6 +268,8 @@
         // Logout function
         function logout() {
           if (confirm('Are you sure you want to logout?')) {
+            // Clear authenticated user from sessionStorage
+            sessionStorage.removeItem('authenticatedUser');
             window.location.href = 'index.html';
           }
         }
