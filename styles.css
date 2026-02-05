@@ -755,9 +755,12 @@ body {
 
 .mission-circles {
   display: grid;
-  grid-template-columns: repeat(4, 250px);
-  gap: 15px;
+  grid-template-columns: repeat(3, 250px);
+  gap: 20px;
   padding: 40px 0;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
   justify-content: center;
   align-content: center;
 }
