@@ -703,7 +703,7 @@ body {
 
 .mission-buttons {
   display: grid;
-  grid-template-columns: repeat(3, 300px);
+  grid-template-columns: repeat(4, 300px);
   gap: 15px;
   padding: 40px 0;
   justify-content: center;
