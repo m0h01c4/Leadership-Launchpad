@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>People Partner Portal | Leadership Launchpad</title>
+    
+    <!-- Prevent search engine indexing -->
+    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+    <meta name="googlebot" content="noindex, nofollow">
+    <meta name="bingbot" content="noindex, nofollow">
+    
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -16,6 +22,15 @@
             <button class="portal-btn" onclick="logout()">Logout</button>
         </div>
     </header>
+
+    <!-- Access Notice Banner -->
+    <section class="welcome-banner" style="background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); padding: 15px 0;">
+        <div class="welcome-container">
+            <p style="margin: 0; color: white; font-weight: 600; text-align: center;">
+                ⚠️ AUTHORIZED ACCESS ONLY - This portal contains confidential information for People Partners
+            </p>
+        </div>
+    </section>
 
     <!-- Welcome Banner -->
     <section class="welcome-banner">
