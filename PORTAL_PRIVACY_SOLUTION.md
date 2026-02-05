@@ -53,3 +53,31 @@ The authentication in this repository provides user experience flow but not true
 - See the valid User IDs in the JavaScript
 
 This is acceptable for internal tools where the URL is not shared publicly, but not for truly sensitive data.
+
+## What Has Been Implemented
+
+To improve privacy within the constraints of GitHub Pages, the following measures have been added:
+
+1. **Search Engine Blocking Meta Tags:**
+   - Added `noindex, nofollow` meta tags to prevent search engines from indexing the portal
+   - Includes specific directives for Google and Bing crawlers
+   - This prevents the portal from appearing in search results
+
+2. **Access Notice Banner:**
+   - Added a prominent warning banner indicating "AUTHORIZED ACCESS ONLY"
+   - Makes it clear the portal contains confidential information
+   - Serves as a visual deterrent for unauthorized access
+
+3. **Existing Authentication:**
+   - Client-side authentication with User ID verification
+   - Session-based access control
+   - Automatic redirect if accessed without proper authentication
+
+### What This Provides:
+- ✅ Portal won't appear in search engine results
+- ✅ Clear warning for anyone who accesses the page
+- ✅ Basic access control for regular users
+- ⚠️ **NOT secure against determined actors** - Anyone with the direct URL can still bypass client-side checks
+
+### For True Privacy:
+Follow the "Recommended Solution" above to move the portal to a separate private repository or password-protected hosting platform.
