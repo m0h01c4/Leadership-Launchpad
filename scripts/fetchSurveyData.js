@@ -18,27 +18,38 @@ try {
 
   console.log('Successfully read both survey files');
 
+  // Helper function to safely get a value or return 0 if missing
+  const getValue = (obj, path) => {
+    const keys = path.split('.');
+    let value = obj;
+    for (const key of keys) {
+      value = value?.[key];
+      if (value === undefined) return 0;
+    }
+    return typeof value === 'number' ? value : 0;
+  };
+
   // Combine the data by adding numeric values
   const combinedData = {
     trainingAttended: {
-      newLeaders: survey1Data.trainingAttended.newLeaders + survey2Data.trainingAttended.newLeaders,
-      leadingIndividualContributors: survey1Data.trainingAttended.leadingIndividualContributors + survey2Data.trainingAttended.leadingIndividualContributors,
-      leadingLeaders: survey1Data.trainingAttended.leadingLeaders + survey2Data.trainingAttended.leadingLeaders
+      newLeaders: getValue(survey1Data, 'trainingAttended.newLeaders') + getValue(survey2Data, 'trainingAttended.newLeaders'),
+      leadingIndividualContributors: getValue(survey1Data, 'trainingAttended.leadingIndividualContributors') + getValue(survey2Data, 'trainingAttended.leadingIndividualContributors'),
+      leadingLeaders: getValue(survey1Data, 'trainingAttended.leadingLeaders') + getValue(survey2Data, 'trainingAttended.leadingLeaders')
     },
     effectiveness: {
-      veryEffective: survey1Data.effectiveness.veryEffective + survey2Data.effectiveness.veryEffective,
-      somewhatEffective: survey1Data.effectiveness.somewhatEffective + survey2Data.effectiveness.somewhatEffective,
-      neutral: survey1Data.effectiveness.neutral + survey2Data.effectiveness.neutral,
-      somewhatIneffective: survey1Data.effectiveness.somewhatIneffective + survey2Data.effectiveness.somewhatIneffective,
-      neitherEffectiveNorIneffective: survey1Data.effectiveness.neitherEffectiveNorIneffective + survey2Data.effectiveness.neitherEffectiveNorIneffective
+      veryEffective: getValue(survey1Data, 'effectiveness.veryEffective') + getValue(survey2Data, 'effectiveness.veryEffective'),
+      somewhatEffective: getValue(survey1Data, 'effectiveness.somewhatEffective') + getValue(survey2Data, 'effectiveness.somewhatEffective'),
+      neutral: getValue(survey1Data, 'effectiveness.neutral') + getValue(survey2Data, 'effectiveness.neutral'),
+      somewhatIneffective: getValue(survey1Data, 'effectiveness.somewhatIneffective') + getValue(survey2Data, 'effectiveness.somewhatIneffective'),
+      neitherEffectiveNorIneffective: getValue(survey1Data, 'effectiveness.neitherEffectiveNorIneffective') + getValue(survey2Data, 'effectiveness.neitherEffectiveNorIneffective')
     },
     trainingNeeds: {
-      communication: survey1Data.trainingNeeds.communication + survey2Data.trainingNeeds.communication,
-      decisionMaking: survey1Data.trainingNeeds.decisionMaking + survey2Data.trainingNeeds.decisionMaking,
-      teamBuilding: survey1Data.trainingNeeds.teamBuilding + survey2Data.trainingNeeds.teamBuilding,
-      conflictResolution: survey1Data.trainingNeeds.conflictResolution + survey2Data.trainingNeeds.conflictResolution,
-      strategicThinking: survey1Data.trainingNeeds.strategicThinking + survey2Data.trainingNeeds.strategicThinking,
-      other: survey1Data.trainingNeeds.other + survey2Data.trainingNeeds.other
+      communication: getValue(survey1Data, 'trainingNeeds.communication') + getValue(survey2Data, 'trainingNeeds.communication'),
+      decisionMaking: getValue(survey1Data, 'trainingNeeds.decisionMaking') + getValue(survey2Data, 'trainingNeeds.decisionMaking'),
+      teamBuilding: getValue(survey1Data, 'trainingNeeds.teamBuilding') + getValue(survey2Data, 'trainingNeeds.teamBuilding'),
+      conflictResolution: getValue(survey1Data, 'trainingNeeds.conflictResolution') + getValue(survey2Data, 'trainingNeeds.conflictResolution'),
+      strategicThinking: getValue(survey1Data, 'trainingNeeds.strategicThinking') + getValue(survey2Data, 'trainingNeeds.strategicThinking'),
+      other: getValue(survey1Data, 'trainingNeeds.other') + getValue(survey2Data, 'trainingNeeds.other')
     }
   };
 
@@ -52,6 +63,7 @@ try {
   console.log(JSON.stringify(combinedData, null, 2));
   
 } catch (error) {
-  console.error('❌ Error combining survey data:', error.message);
+  console.error('❌ Error combining survey data:', error);
+  console.error('Stack trace:', error.stack);
   process.exit(1);
 }
