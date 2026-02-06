@@ -6,10 +6,11 @@
   "scripts": {
     "fetch-survey": "node scripts/fetchSurveyData.js"
   },
-  "keywords": ["leadership", "training", "survey"],
+  "keywords": [
+    "leadership",
+    "training",
+    "survey"
+  ],
   "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "node-fetch": "^3.3.2"
-  }
+  "license": "MIT"
 }

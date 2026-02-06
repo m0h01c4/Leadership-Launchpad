@@ -1,7 +1,8 @@
-import fetch from 'node-fetch';
 import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import https from 'https';
+import http from 'http';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -46,6 +47,37 @@ function validateJSON(data, source) {
 }
 
 /**
+ * Fetches JSON data from a URL using https/http module as fallback
+ */
+function httpsGet(url) {
+  return new Promise((resolve, reject) => {
+    const client = url.startsWith('https:') ? https : http;
+    client.get(url, (res) => {
+      let data = '';
+      
+      // Handle redirects
+      if (res.statusCode === 301 || res.statusCode === 302) {
+        return httpsGet(res.headers.location).then(resolve).catch(reject);
+      }
+      
+      if (res.statusCode !== 200) {
+        reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`));
+        return;
+      }
+      
+      res.on('data', (chunk) => { data += chunk; });
+      res.on('end', () => {
+        try {
+          resolve(JSON.parse(data));
+        } catch (error) {
+          reject(new Error('Invalid JSON format'));
+        }
+      });
+    }).on('error', reject);
+  });
+}
+
+/**
  * Fetches JSON data from a URL with error handling
  */
 async function fetchJSON(url, source) {
@@ -56,19 +88,35 @@ async function fetchJSON(url, source) {
   console.log(`Fetching ${source} from: ${url}`);
 
   try {
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
+    // Try using native fetch first, fall back to https module
+    let data;
+    try {
+      const response = await fetch(url);
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
 
-    const data = await response.json();
+      data = await response.json();
+    } catch (fetchError) {
+      // Fallback to https/http module
+      if (fetchError.message.includes('fetch failed') || fetchError.cause) {
+        console.log(`  Falling back to https module...`);
+        data = await httpsGet(url);
+      } else {
+        throw fetchError;
+      }
+    }
+    
     validateJSON(data, source);
     
     console.log(`✓ ${source} fetched and validated successfully`);
     return data;
   } catch (error) {
-    if (error.message.includes('fetch failed') || error.message.includes('ENOTFOUND')) {
+    // Log the actual error for debugging
+    console.error(`Error details: ${error.message}`);
+    
+    if (error.message.includes('fetch failed') || error.message.includes('ENOTFOUND') || error.message.includes('ECONNREFUSED')) {
       throw new Error(`${source}: Network error - unable to reach URL. Check your internet connection and URL.`);
     }
     if (error.message.includes('invalid json')) {

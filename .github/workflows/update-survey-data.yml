@@ -21,10 +21,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+      - name: Install dependencies (if any)
+        run: npm ci || npm install || echo "No dependencies to install"
 
       - name: Fetch and combine survey data
         env:
