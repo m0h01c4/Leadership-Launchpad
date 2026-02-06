@@ -188,7 +188,7 @@
                 <!-- Last Updated Indicator -->
                 <div style="text-align: center; margin: 20px 0; padding: 10px; background-color: #f0f4ff; border-radius: 8px;">
                     <p style="margin: 0; color: #5B7FFF; font-size: 14px;">
-                        <strong>📊 Data Last Updated:</strong> <span id="lastUpdated">Loading...</span>
+                        <strong>📊 Data Last Refreshed:</strong> <span id="lastUpdated">Loading...</span>
                     </p>
                 </div>
 
@@ -346,6 +346,10 @@
         // Function to load survey data
         function loadSurveyData() {
             const timestamp = new Date().getTime();
+            // Defense-in-depth: Use multiple cache-busting mechanisms
+            // - Query parameter (?t=) prevents URL caching
+            // - cache: 'no-store' prevents Fetch API caching
+            // - Headers provide additional insurance against HTTP caching
             fetch('./surveyData.json?t=' + timestamp, {
                 cache: 'no-store',
                 headers: {
