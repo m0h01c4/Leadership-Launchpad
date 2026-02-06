@@ -317,11 +317,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             checkVerification();
             
-            document.getElementById('userIdInput').addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    verifyUserId();
-                }
-            });
+            const userIdInput = document.getElementById('userIdInput');
+            if (userIdInput) {
+                userIdInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        verifyUserId();
+                    }
+                });
+            }
         });
     </script>
 
