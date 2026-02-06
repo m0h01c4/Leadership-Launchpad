@@ -1,0 +1,22 @@
+{
+  "trainingAttended": {
+    "newLeaders": 2,
+    "leadingIndividualContributors": 1,
+    "leadingLeaders": 1
+  },
+  "effectiveness": {
+    "veryEffective": 3,
+    "somewhatEffective": 0,
+    "neutral": 0,
+    "somewhatIneffective": 0,
+    "neitherEffectiveNorIneffective": 1
+  },
+  "trainingNeeds": {
+    "communication": 2,
+    "decisionMaking": 1,
+    "teamBuilding": 1,
+    "conflictResolution": 0,
+    "strategicThinking": 1,
+    "other": 0
+  }
+}
