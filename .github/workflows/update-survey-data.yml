@@ -1,15 +1,26 @@
 name: Update Survey Data
 
 on:
-  push:
-    paths:
-      - 'surveyData*.json'
-      - '!surveyData.json'
+  # Run daily at midnight UTC
+  schedule:
+    - cron: '0 0 * * *'
+  
+  # Allow manual trigger
   workflow_dispatch:
+    inputs:
+      data_source_type:
+        description: 'Data source type (api or file)'
+        required: false
+        default: 'file'
+        type: choice
+        options:
+          - file
+          - api
 
 jobs:
-  combine-survey-data:
+  update-survey-data:
     runs-on: ubuntu-latest
+    
     permissions:
       contents: write
     
@@ -23,24 +34,34 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'
       
-      - name: Run survey data combination script
-        run: npm run combine-surveys
+      - name: Install dependencies
+        run: npm ci
+      
+      - name: Run survey data fetch script
+        env:
+          DATA_SOURCE_TYPE: ${{ github.event.inputs.data_source_type || 'file' }}
+          SURVEY_1_URL: ${{ secrets.SURVEY_1_URL || 'scripts/surveyData1.example.json' }}
+          SURVEY_2_URL: ${{ secrets.SURVEY_2_URL || 'scripts/surveyData2.example.json' }}
+          MS_FORMS_API_KEY: ${{ secrets.MS_FORMS_API_KEY }}
+          FALLBACK_ON_ERROR: 'true'
+        run: npm run fetch-survey-data
       
       - name: Check for changes
-        id: check_changes
+        id: git-check
         run: |
-          if git diff --quiet surveyData.json; then
-            echo "changed=false" >> $GITHUB_OUTPUT
-          else
-            echo "changed=true" >> $GITHUB_OUTPUT
-          fi
+          git diff --exit-code surveyData.json || echo "changed=true" >> $GITHUB_OUTPUT
       
-      - name: Commit and push updated surveyData.json
-        if: steps.check_changes.outputs.changed == 'true'
+      - name: Commit and push changes
+        if: steps.git-check.outputs.changed == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
           git add surveyData.json
-          git commit -m "Auto-update combined survey data"
+          git commit -m "chore: update survey data [automated]"
           git push
+      
+      - name: No changes detected
+        if: steps.git-check.outputs.changed != 'true'
+        run: echo "No changes to surveyData.json - skipping commit"
