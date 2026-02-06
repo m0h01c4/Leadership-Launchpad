@@ -1,0 +1,19 @@
+{
+  "name": "leadership-launchpad",
+  "version": "1.0.0",
+  "description": "Leadership Launchpad - Survey data management",
+  "scripts": {
+    "combine-surveys": "node scripts/fetchSurveyData.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m0h01c4/Leadership-Launchpad"
+  },
+  "keywords": [
+    "leadership",
+    "survey",
+    "data"
+  ],
+  "author": "",
+  "license": "ISC"
+}
