@@ -189,6 +189,9 @@
                 <div style="text-align: center; margin: 20px 0; padding: 10px; background-color: #f0f4ff; border-radius: 8px;">
                     <p style="margin: 0; color: #5B7FFF; font-size: 14px;">
                         <strong>📊 Data Last Refreshed:</strong> <span id="lastUpdated">Loading...</span>
+                        <button id="refreshButton" onclick="refreshData()" style="margin-left: 15px; padding: 5px 15px; background-color: #5B7FFF; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">
+                            🔄 Refresh Now
+                        </button>
                     </p>
                 </div>
 
@@ -406,6 +409,30 @@
                 loadSurveyData();
             }
         });
+
+        // Function to refresh data manually (called by button)
+        function refreshData() {
+            console.log('Manual refresh triggered');
+            const button = document.getElementById('refreshButton');
+            // Disable button and show loading state
+            button.disabled = true;
+            button.innerHTML = '🔄 Refreshing...';
+            
+            loadSurveyData();
+            
+            // Re-enable button after a short delay
+            setTimeout(() => {
+                button.disabled = false;
+                button.innerHTML = '🔄 Refresh Now';
+            }, 1000);
+        }
+
+        // Auto-refresh data every 5 minutes (300000ms)
+        // This ensures the portal shows updated data after survey submissions
+        setInterval(function() {
+            console.log('Auto-refresh triggered (5-minute interval)');
+            loadSurveyData();
+        }, 300000);
 
         // Store chart instances to allow destruction on reload
         let trainingChartInstance = null;
