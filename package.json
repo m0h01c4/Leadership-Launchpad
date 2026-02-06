@@ -1,0 +1,15 @@
+{
+  "name": "leadership-launchpad",
+  "version": "1.0.0",
+  "description": "Leadership training portal with survey data integration",
+  "type": "module",
+  "scripts": {
+    "fetch-survey": "node scripts/fetchSurveyData.js"
+  },
+  "keywords": ["leadership", "training", "survey"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}

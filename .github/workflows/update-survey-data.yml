@@ -1,0 +1,49 @@
+name: Update Survey Data
+
+# This workflow fetches survey data from two JSON URLs and combines them
+# No Microsoft API authentication required - just direct JSON URL fetching
+
+on:
+  schedule:
+    # Run every 6 hours
+    - cron: '0 */6 * * *'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  update-survey-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch and combine survey data
+        env:
+          # These secrets should be set in GitHub repository settings
+          # They should contain direct URLs to JSON files (e.g., GitHub Gist raw URLs)
+          SURVEY1_URL: ${{ secrets.SURVEY1_URL }}
+          SURVEY2_URL: ${{ secrets.SURVEY2_URL }}
+        run: npm run fetch-survey
+
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --exit-code surveyData.json || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add surveyData.json
+          git commit -m "Auto-update survey data [skip ci]"
+          git push
