@@ -1,19 +1,29 @@
 {
   "name": "leadership-launchpad",
   "version": "1.0.0",
-  "description": "Leadership Launchpad - Survey data management",
+  "description": "Leadership development program portal with survey data integration",
+  "main": "index.html",
   "scripts": {
-    "combine-surveys": "node scripts/fetchSurveyData.js"
+    "fetch-survey-data": "node scripts/fetchSurveyData.js",
+    "test": "echo \"No tests configured yet\" && exit 0"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/m0h01c4/Leadership-Launchpad"
+    "url": "https://github.com/m0h01c4/Leadership-Launchpad.git"
   },
   "keywords": [
     "leadership",
+    "training",
     "survey",
-    "data"
+    "portal"
   ],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.7"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
 }

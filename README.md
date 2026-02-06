@@ -1,0 +1,89 @@
+# Leadership Launchpad
+
+A leadership training portal with automated survey data integration.
+
+## Features
+
+- **Survey Data Integration**: Automatically fetch and combine survey data from multiple sources
+- **No Complex Setup**: No Microsoft API credentials or Azure AD configuration needed
+- **Multiple Integration Methods**: Choose from GitHub Gist, Excel exports, Power Automate, or manual updates
+- **Automated Updates**: GitHub Actions workflow runs every 6 hours to keep data current
+
+## Quick Start
+
+See [SURVEY_DATA_SETUP.md](SURVEY_DATA_SETUP.md) for detailed setup instructions. The fastest way to get started (5 minutes):
+
+1. Create two public GitHub Gists with your survey data in JSON format
+2. Get the raw URLs from each Gist
+3. Add the URLs as GitHub Secrets (`SURVEY1_URL` and `SURVEY2_URL`)
+4. Run the workflow manually or wait for automatic updates
+
+## Survey Data Structure
+
+Each survey JSON file should follow this structure:
+
+```json
+{
+  "trainingAttended": {
+    "newLeaders": 0,
+    "leadingIndividualContributors": 0,
+    "leadingLeaders": 0
+  },
+  "effectiveness": {
+    "veryEffective": 0,
+    "somewhatEffective": 0,
+    "neutral": 0,
+    "somewhatIneffective": 0,
+    "neitherEffectiveNorIneffective": 0
+  },
+  "trainingNeeds": {
+    "communication": 0,
+    "decisionMaking": 0,
+    "teamBuilding": 0,
+    "conflictResolution": 0,
+    "strategicThinking": 0,
+    "other": 0
+  }
+}
+```
+
+## Documentation
+
+- [Complete Survey Data Setup Guide](SURVEY_DATA_SETUP.md) - Detailed instructions for all integration methods
+- [Troubleshooting](SURVEY_DATA_SETUP.md#troubleshooting) - Common issues and solutions
+
+## How It Works
+
+1. You maintain two JSON files with survey data in accessible locations (GitHub Gist, GitHub repo, OneDrive, etc.)
+2. The GitHub Actions workflow runs automatically every 6 hours (or manually on-demand)
+3. The script fetches both JSON files, validates them, and combines the numeric values
+4. The combined result is written to `surveyData.json` in the repository
+5. Your portal displays the updated data
+
+## Local Development
+
+To test the survey data fetching locally:
+
+```bash
+# Set environment variables
+export SURVEY1_URL="https://gist.githubusercontent.com/.../surveyData1.json"
+export SURVEY2_URL="https://gist.githubusercontent.com/.../surveyData2.json"
+
+# Run the script
+npm run fetch-survey
+```
+
+## GitHub Actions
+
+The workflow is triggered:
+- Automatically every 6 hours
+- Manually via the Actions tab → "Update Survey Data" → "Run workflow"
+
+## Requirements
+
+- Node.js 18+ (for native fetch support)
+- Two publicly accessible JSON URLs with survey data
+
+## License
+
+MIT

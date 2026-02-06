@@ -1,28 +1,32 @@
 # Dependencies
 node_modules/
 
+# Environment variables
+.env
+.env.local
+
 # Logs
+logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # OS files
 .DS_Store
 Thumbs.db
 
-# IDE
+# IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
 
-# Temporary files
-*.tmp
-*.temp
-/tmp/
+# Local configuration
+config.local.js
+surveyData1.json
+surveyData2.json
 
-# Build outputs (if any in the future)
+# Build outputs
 dist/
 build/
-
-# Survey data files are TRACKED (not ignored)
-# surveyData.json - DO NOT IGNORE
-# surveyData1.json - DO NOT IGNORE  
-# combinedSurveyData.json - DO NOT IGNORE

@@ -1,22 +1,22 @@
 {
   "trainingAttended": {
-    "newLeaders": 3,
-    "leadingIndividualContributors": 2,
-    "leadingLeaders": 1
+    "newLeaders": 5,
+    "leadingIndividualContributors": 5,
+    "leadingLeaders": 3
   },
   "effectiveness": {
-    "veryEffective": 4,
-    "somewhatEffective": 1,
-    "neutral": 0,
-    "somewhatIneffective": 0,
+    "veryEffective": 7,
+    "somewhatEffective": 3,
+    "neutral": 1,
+    "somewhatIneffective": 1,
     "neitherEffectiveNorIneffective": 1
   },
   "trainingNeeds": {
-    "communication": 3,
-    "decisionMaking": 2,
-    "teamBuilding": 2,
-    "conflictResolution": 1,
-    "strategicThinking": 2,
-    "other": 0
+    "communication": 5,
+    "decisionMaking": 5,
+    "teamBuilding": 3,
+    "conflictResolution": 3,
+    "strategicThinking": 3,
+    "other": 1
   }
 }
