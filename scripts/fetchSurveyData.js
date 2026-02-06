@@ -1,45 +1,73 @@
-import fs from 'fs/promises';
-import path from 'path';
-import { fileURLToPath } from 'url';
-import https from 'https';
-import http from 'http';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+#!/usr/bin/env node
 
 /**
- * Fetches survey data from two JSON URLs and combines them
- * This is a simplified approach that doesn't require Microsoft Forms API
+ * Leadership Launchpad Survey Data Fetching Script
+ * 
+ * This script fetches survey data from two Microsoft Forms sources,
+ * combines the numeric responses, and updates surveyData.json.
+ * 
+ * Configuration via environment variables:
+ * - DATA_SOURCE_TYPE: 'api' (Microsoft Forms/Graph API) or 'file' (local JSON files)
+ * - SURVEY_1_URL: URL or file path for first survey data
+ * - SURVEY_2_URL: URL or file path for second survey data
+ * - MS_FORMS_API_KEY: API key for Microsoft Forms (if using API)
+ * - OUTPUT_PATH: Path to output surveyData.json (default: ./surveyData.json)
  */
 
-// Get URLs from environment variables
-const SURVEY1_URL = process.env.SURVEY1_URL;
-const SURVEY2_URL = process.env.SURVEY2_URL;
+const fs = require('fs').promises;
+const path = require('path');
+const axios = require('axios');
 
-// Expected JSON structure for validation
-const expectedStructure = {
-  trainingAttended: ['newLeaders', 'leadingIndividualContributors', 'leadingLeaders'],
-  effectiveness: ['veryEffective', 'somewhatEffective', 'neutral', 'somewhatIneffective', 'neitherEffectiveNorIneffective'],
-  trainingNeeds: ['communication', 'decisionMaking', 'teamBuilding', 'conflictResolution', 'strategicThinking', 'other']
+// Configuration
+const CONFIG = {
+  dataSourceType: process.env.DATA_SOURCE_TYPE || 'file',
+  survey1Source: process.env.SURVEY_1_URL || path.join(__dirname, 'surveyData1.example.json'),
+  survey2Source: process.env.SURVEY_2_URL || path.join(__dirname, 'surveyData2.example.json'),
+  apiKey: process.env.MS_FORMS_API_KEY || '',
+  outputPath: process.env.OUTPUT_PATH || path.join(__dirname, '..', 'surveyData.json'),
+  fallbackOnError: process.env.FALLBACK_ON_ERROR !== 'false' // Default to true
 };
 
 /**
- * Validates that JSON has the expected structure
+ * Initialize the data structure with zeros
  */
-function validateJSON(data, source) {
+function initializeDataStructure() {
+  return {
+    trainingAttended: {
+      newLeaders: 0,
+      leadingIndividualContributors: 0,
+      leadingLeaders: 0
+    },
+    effectiveness: {
+      veryEffective: 0,
+      somewhatEffective: 0,
+      neutral: 0,
+      somewhatIneffective: 0,
+      neitherEffectiveNorIneffective: 0
+    },
+    trainingNeeds: {
+      communication: 0,
+      decisionMaking: 0,
+      teamBuilding: 0,
+      conflictResolution: 0,
+      strategicThinking: 0,
+      other: 0
+    }
+  };
+}
+
+/**
+ * Validate survey data structure
+ */
+function validateSurveyData(data) {
   if (!data || typeof data !== 'object') {
-    throw new Error(`${source}: Invalid JSON - expected object`);
+    throw new Error('Survey data must be an object');
   }
 
-  for (const [category, fields] of Object.entries(expectedStructure)) {
+  const requiredCategories = ['trainingAttended', 'effectiveness', 'trainingNeeds'];
+  for (const category of requiredCategories) {
     if (!data[category] || typeof data[category] !== 'object') {
-      throw new Error(`${source}: Missing or invalid category: ${category}`);
-    }
-
-    for (const field of fields) {
-      if (typeof data[category][field] !== 'number') {
-        throw new Error(`${source}: Missing or invalid numeric field: ${category}.${field}`);
-      }
+      throw new Error(`Missing or invalid category: ${category}`);
     }
   }
 
@@ -47,167 +75,227 @@ function validateJSON(data, source) {
 }
 
 /**
- * Fetches JSON data from a URL using https/http module as fallback
+ * Fetch data from a local JSON file
  */
-function httpsGet(url) {
-  return new Promise((resolve, reject) => {
-    const client = url.startsWith('https:') ? https : http;
-    client.get(url, (res) => {
-      let data = '';
-      
-      // Handle redirects
-      if (res.statusCode === 301 || res.statusCode === 302) {
-        return httpsGet(res.headers.location).then(resolve).catch(reject);
-      }
-      
-      if (res.statusCode !== 200) {
-        reject(new Error(`HTTP ${res.statusCode}: ${res.statusMessage}`));
-        return;
-      }
-      
-      res.on('data', (chunk) => { data += chunk; });
-      res.on('end', () => {
-        try {
-          resolve(JSON.parse(data));
-        } catch (error) {
-          reject(new Error('Invalid JSON format'));
-        }
-      });
-    }).on('error', reject);
-  });
-}
-
-/**
- * Fetches JSON data from a URL with error handling
- */
-async function fetchJSON(url, source) {
-  if (!url) {
-    throw new Error(`${source} URL is not set. Please set the environment variable.`);
-  }
-
-  console.log(`Fetching ${source} from: ${url}`);
-
+async function fetchFromFile(filePath) {
+  console.log(`Fetching data from file: ${filePath}`);
   try {
-    // Try using native fetch first, fall back to https module
-    let data;
-    try {
-      const response = await fetch(url);
-      
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-
-      data = await response.json();
-    } catch (fetchError) {
-      // Fallback to https/http module if fetch fails
-      if (fetchError.message.includes('fetch failed') || 
-          (fetchError.cause && (fetchError.cause.code === 'ENOTFOUND' || 
-                                fetchError.cause.code === 'ECONNREFUSED' ||
-                                fetchError.cause.code === 'ETIMEDOUT'))) {
-        console.log(`  Falling back to https module...`);
-        data = await httpsGet(url);
-      } else {
-        throw fetchError;
-      }
-    }
-    
-    validateJSON(data, source);
-    
-    console.log(`✓ ${source} fetched and validated successfully`);
+    const absolutePath = path.isAbsolute(filePath) ? filePath : path.join(process.cwd(), filePath);
+    const fileContent = await fs.readFile(absolutePath, 'utf8');
+    const data = JSON.parse(fileContent);
+    validateSurveyData(data);
+    console.log(`✓ Successfully loaded data from ${filePath}`);
     return data;
   } catch (error) {
-    // Log the actual error for debugging
-    console.error(`Error details: ${error.message}`);
-    
-    if (error.message.includes('fetch failed') || error.message.includes('ENOTFOUND') || error.message.includes('ECONNREFUSED')) {
-      throw new Error(`${source}: Network error - unable to reach URL. Check your internet connection and URL.`);
-    }
-    if (error.message.includes('Invalid JSON format') || error.message.toLowerCase().includes('invalid json')) {
-      throw new Error(`${source}: Invalid JSON format. Ensure the URL returns valid JSON data.`);
-    }
-    throw new Error(`${source}: ${error.message}`);
+    console.error(`✗ Error reading file ${filePath}:`, error.message);
+    throw error;
   }
 }
 
 /**
- * Combines two survey datasets by adding numeric values
+ * Fetch data from Microsoft Forms API or Microsoft Graph API
+ */
+async function fetchFromAPI(url) {
+  console.log(`Fetching data from API: ${url}`);
+  try {
+    const headers = {
+      'Content-Type': 'application/json'
+    };
+
+    // Add authentication if API key is provided
+    if (CONFIG.apiKey) {
+      headers['Authorization'] = `Bearer ${CONFIG.apiKey}`;
+    }
+
+    const response = await axios.get(url, {
+      headers,
+      timeout: 30000 // 30 second timeout
+    });
+
+    if (!response.data) {
+      throw new Error('No data received from API');
+    }
+
+    // The API might return data in different formats
+    // This is a flexible approach that can handle both direct JSON
+    // and wrapped responses
+    let data = response.data;
+    
+    // If the response has a 'data' property, use that
+    if (data.data && typeof data.data === 'object') {
+      data = data.data;
+    }
+    
+    // If the response has a 'value' property (Graph API style), use that
+    if (data.value && typeof data.value === 'object') {
+      data = data.value;
+    }
+
+    validateSurveyData(data);
+    console.log(`✓ Successfully fetched data from API`);
+    return data;
+  } catch (error) {
+    if (error.response) {
+      console.error(`✗ API Error: ${error.response.status} - ${error.response.statusText}`);
+    } else if (error.request) {
+      console.error(`✗ Network Error: No response received from ${url}`);
+    } else {
+      console.error(`✗ Error fetching from API:`, error.message);
+    }
+    throw error;
+  }
+}
+
+/**
+ * Fetch survey data based on source type
+ */
+async function fetchSurveyData(source) {
+  if (CONFIG.dataSourceType === 'api') {
+    return await fetchFromAPI(source);
+  } else {
+    return await fetchFromFile(source);
+  }
+}
+
+/**
+ * Combine two survey data objects by adding their numeric values
  */
 function combineSurveyData(data1, data2) {
-  const combined = {
-    trainingAttended: {},
-    effectiveness: {},
-    trainingNeeds: {}
+  console.log('Combining survey data from both sources...');
+  const combined = initializeDataStructure();
+
+  // Helper function to safely add values
+  const safeAdd = (val1, val2) => {
+    const num1 = typeof val1 === 'number' ? val1 : 0;
+    const num2 = typeof val2 === 'number' ? val2 : 0;
+    return num1 + num2;
   };
 
   // Combine trainingAttended
-  for (const field of expectedStructure.trainingAttended) {
-    combined.trainingAttended[field] = 
-      (data1.trainingAttended[field] || 0) + (data2.trainingAttended[field] || 0);
+  for (const key in combined.trainingAttended) {
+    combined.trainingAttended[key] = safeAdd(
+      data1.trainingAttended?.[key],
+      data2.trainingAttended?.[key]
+    );
   }
 
   // Combine effectiveness
-  for (const field of expectedStructure.effectiveness) {
-    combined.effectiveness[field] = 
-      (data1.effectiveness[field] || 0) + (data2.effectiveness[field] || 0);
+  for (const key in combined.effectiveness) {
+    combined.effectiveness[key] = safeAdd(
+      data1.effectiveness?.[key],
+      data2.effectiveness?.[key]
+    );
   }
 
   // Combine trainingNeeds
-  for (const field of expectedStructure.trainingNeeds) {
-    combined.trainingNeeds[field] = 
-      (data1.trainingNeeds[field] || 0) + (data2.trainingNeeds[field] || 0);
+  for (const key in combined.trainingNeeds) {
+    combined.trainingNeeds[key] = safeAdd(
+      data1.trainingNeeds?.[key],
+      data2.trainingNeeds?.[key]
+    );
   }
 
+  console.log('✓ Successfully combined survey data');
   return combined;
 }
 
 /**
- * Main function to fetch and combine survey data
+ * Read existing survey data for fallback
  */
-async function main() {
+async function readExistingData() {
   try {
-    console.log('=== Survey Data Fetching Started ===\n');
-
-    // Fetch both surveys
-    const [survey1Data, survey2Data] = await Promise.all([
-      fetchJSON(SURVEY1_URL, 'SURVEY1'),
-      fetchJSON(SURVEY2_URL, 'SURVEY2')
-    ]);
-
-    // Combine the data
-    console.log('\nCombining survey data...');
-    const combinedData = combineSurveyData(survey1Data, survey2Data);
-
-    // Write to file
-    const outputPath = path.join(__dirname, '..', 'surveyData.json');
-    await fs.writeFile(outputPath, JSON.stringify(combinedData, null, 2) + '\n');
-    
-    console.log(`✓ Combined data written to: ${outputPath}`);
-    console.log('\n=== Survey Data Fetching Completed Successfully ===');
-    
-    // Display summary
-    console.log('\nSummary:');
-    console.log(`  Total training attendees: ${
-      combinedData.trainingAttended.newLeaders + 
-      combinedData.trainingAttended.leadingIndividualContributors + 
-      combinedData.trainingAttended.leadingLeaders
-    }`);
-    console.log(`  Effectiveness responses: ${
-      combinedData.effectiveness.veryEffective + 
-      combinedData.effectiveness.somewhatEffective + 
-      combinedData.effectiveness.neutral + 
-      combinedData.effectiveness.somewhatIneffective + 
-      combinedData.effectiveness.neitherEffectiveNorIneffective
-    }`);
-
+    const existingData = await fs.readFile(CONFIG.outputPath, 'utf8');
+    return JSON.parse(existingData);
   } catch (error) {
-    console.error('\n❌ Error:', error.message);
-    console.error('\nTroubleshooting tips:');
-    console.error('  1. Ensure SURVEY1_URL and SURVEY2_URL environment variables are set');
-    console.error('  2. Verify the URLs are accessible and return valid JSON');
-    console.error('  3. Check that the JSON structure matches the expected format');
-    console.error('  4. If using GitHub, ensure URLs point to "raw" content');
-    process.exit(1);
+    console.log('No existing survey data found or error reading file');
+    return null;
   }
 }
 
-main();
+/**
+ * Write combined data to output file
+ */
+async function writeOutputFile(data) {
+  try {
+    const jsonString = JSON.stringify(data, null, 2);
+    await fs.writeFile(CONFIG.outputPath, jsonString + '\n', 'utf8');
+    console.log(`✓ Successfully wrote data to ${CONFIG.outputPath}`);
+    return true;
+  } catch (error) {
+    console.error(`✗ Error writing to ${CONFIG.outputPath}:`, error.message);
+    throw error;
+  }
+}
+
+/**
+ * Main execution function
+ */
+async function main() {
+  console.log('='.repeat(60));
+  console.log('Leadership Launchpad Survey Data Fetch');
+  console.log('='.repeat(60));
+  console.log(`Data Source Type: ${CONFIG.dataSourceType}`);
+  console.log(`Survey 1 Source: ${CONFIG.survey1Source}`);
+  console.log(`Survey 2 Source: ${CONFIG.survey2Source}`);
+  console.log(`Output Path: ${CONFIG.outputPath}`);
+  console.log(`Fallback on Error: ${CONFIG.fallbackOnError}`);
+  console.log('='.repeat(60));
+
+  try {
+    // Fetch data from both sources
+    console.log('\nFetching survey data...');
+    const [surveyData1, surveyData2] = await Promise.all([
+      fetchSurveyData(CONFIG.survey1Source),
+      fetchSurveyData(CONFIG.survey2Source)
+    ]);
+
+    // Combine the data
+    const combinedData = combineSurveyData(surveyData1, surveyData2);
+
+    // Write to output file
+    await writeOutputFile(combinedData);
+
+    console.log('\n' + '='.repeat(60));
+    console.log('✓ Survey data update completed successfully!');
+    console.log('='.repeat(60));
+    console.log('\nCombined Data Summary:');
+    console.log(JSON.stringify(combinedData, null, 2));
+    
+    process.exit(0);
+  } catch (error) {
+    console.error('\n' + '='.repeat(60));
+    console.error('✗ Error during survey data fetch:');
+    console.error('='.repeat(60));
+    console.error(error.message);
+    
+    if (CONFIG.fallbackOnError) {
+      console.log('\nAttempting to preserve existing data...');
+      const existingData = await readExistingData();
+      
+      if (existingData) {
+        console.log('✓ Existing data preserved - no changes made');
+        console.log('Current data:');
+        console.log(JSON.stringify(existingData, null, 2));
+        process.exit(0);
+      } else {
+        console.error('✗ No existing data to fall back to');
+        process.exit(1);
+      }
+    } else {
+      console.error('\nFallback disabled - exiting with error');
+      process.exit(1);
+    }
+  }
+}
+
+// Run the script
+if (require.main === module) {
+  main();
+}
+
+module.exports = {
+  fetchSurveyData,
+  combineSurveyData,
+  initializeDataStructure,
+  validateSurveyData
+};
