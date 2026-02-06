@@ -703,7 +703,7 @@ body {
 
 .mission-buttons {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 15px;
   padding: 40px 0;
   justify-content: center;
@@ -959,6 +959,10 @@ body {
 
   .header-container {
     padding: 0 30px;
+  }
+
+  .mission-buttons {
+    flex-wrap: wrap;
   }
 }
 
