@@ -47,11 +47,20 @@ function initializeDataStructure() {
     },
     trainingNeeds: {
       communication: 0,
-      decisionMaking: 0,
+      decisionMakingProblemSolving: 0,
       teamBuilding: 0,
-      conflictResolution: 0,
+      healthyConflict: 0,
       strategicThinking: 0,
-      other: 0
+      feedbackCoaching: 0,
+      developmentOwnershipIDP: 0,
+      careerConversations: 0,
+      emotionalIntelligenceSelfAwareness: 0,
+      personalBrandPresence: 0,
+      navigatingChangeAmbiguity: 0,
+      influencePersuasion: 0,
+      negotiations: 0,
+      restResilience: 0,
+      careerNavigation: 0
     }
   };
 }

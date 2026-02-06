@@ -434,16 +434,41 @@
             new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: ['Communication', 'Decision-making', 'Team Building', 'Conflict Resolution', 'Strategic Thinking', 'Other'],
+                    labels: [
+                        'Communication',
+                        'Decision Making & Problem Solving',
+                        'Team Building',
+                        'Healthy Conflict',
+                        'Strategic Thinking',
+                        'Feedback & Coaching',
+                        'Development Ownership & IDP',
+                        'Career Conversations',
+                        'Emotional Intelligence & Self-Awareness',
+                        'Personal Brand & Presence',
+                        'Navigating Change & Ambiguity',
+                        'Influence & Persuasion',
+                        'Negotiations',
+                        'Rest & Resilience',
+                        'Career Navigation'
+                    ],
                     datasets: [{
                         label: 'Number of Selections',
                         data: [
                             data.trainingNeeds.communication,
-                            data.trainingNeeds.decisionMaking,
+                            data.trainingNeeds.decisionMakingProblemSolving,
                             data.trainingNeeds.teamBuilding,
-                            data.trainingNeeds.conflictResolution,
+                            data.trainingNeeds.healthyConflict,
                             data.trainingNeeds.strategicThinking,
-                            data.trainingNeeds.other
+                            data.trainingNeeds.feedbackCoaching,
+                            data.trainingNeeds.developmentOwnershipIDP,
+                            data.trainingNeeds.careerConversations,
+                            data.trainingNeeds.emotionalIntelligenceSelfAwareness,
+                            data.trainingNeeds.personalBrandPresence,
+                            data.trainingNeeds.navigatingChangeAmbiguity,
+                            data.trainingNeeds.influencePersuasion,
+                            data.trainingNeeds.negotiations,
+                            data.trainingNeeds.restResilience,
+                            data.trainingNeeds.careerNavigation
                         ],
                         backgroundColor: [
                             '#0066CC',
@@ -451,7 +476,16 @@
                             '#FF1493',
                             '#20B2AA',
                             '#FFB820',
-                            '#FF8C42'
+                            '#FF8C42',
+                            '#9C27B0',
+                            '#4CAF50',
+                            '#F44336',
+                            '#00BCD4',
+                            '#FFC107',
+                            '#795548',
+                            '#607D8B',
+                            '#E91E63',
+                            '#3F51B5'
                         ],
                         borderRadius: 8,
                         borderSkipped: false

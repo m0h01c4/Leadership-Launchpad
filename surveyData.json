@@ -13,10 +13,19 @@
   },
   "trainingNeeds": {
     "communication": 5,
-    "decisionMaking": 5,
+    "decisionMakingProblemSolving": 5,
     "teamBuilding": 3,
-    "conflictResolution": 3,
+    "healthyConflict": 3,
     "strategicThinking": 3,
-    "other": 1
+    "feedbackCoaching": 1,
+    "developmentOwnershipIDP": 0,
+    "careerConversations": 0,
+    "emotionalIntelligenceSelfAwareness": 0,
+    "personalBrandPresence": 0,
+    "navigatingChangeAmbiguity": 0,
+    "influencePersuasion": 0,
+    "negotiations": 0,
+    "restResilience": 0,
+    "careerNavigation": 0
   }
 }
