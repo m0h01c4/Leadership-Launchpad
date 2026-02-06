@@ -108,7 +108,7 @@ Each survey JSON file must follow this exact structure:
 - `somewhatEffective`: Moderately satisfied
 - `neutral`: No strong opinion
 - `somewhatIneffective`: Somewhat dissatisfied
-- `neitherEffectiveNorIneffective`: Alternative neutral response
+- `neitherEffectiveNorIneffective`: Alternative neutral response (distinct from "neutral" to capture different survey phrasing)
 
 **trainingNeeds**: Count of requests by topic
 - `communication`: Communication skills

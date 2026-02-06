@@ -99,8 +99,11 @@ async function fetchJSON(url, source) {
 
       data = await response.json();
     } catch (fetchError) {
-      // Fallback to https/http module
-      if (fetchError.message.includes('fetch failed') || fetchError.cause) {
+      // Fallback to https/http module if fetch fails
+      if (fetchError.message.includes('fetch failed') || 
+          (fetchError.cause && (fetchError.cause.code === 'ENOTFOUND' || 
+                                fetchError.cause.code === 'ECONNREFUSED' ||
+                                fetchError.cause.code === 'ETIMEDOUT'))) {
         console.log(`  Falling back to https module...`);
         data = await httpsGet(url);
       } else {
@@ -119,7 +122,7 @@ async function fetchJSON(url, source) {
     if (error.message.includes('fetch failed') || error.message.includes('ENOTFOUND') || error.message.includes('ECONNREFUSED')) {
       throw new Error(`${source}: Network error - unable to reach URL. Check your internet connection and URL.`);
     }
-    if (error.message.includes('invalid json')) {
+    if (error.message.includes('Invalid JSON format') || error.message.toLowerCase().includes('invalid json')) {
       throw new Error(`${source}: Invalid JSON format. Ensure the URL returns valid JSON data.`);
     }
     throw new Error(`${source}: ${error.message}`);
