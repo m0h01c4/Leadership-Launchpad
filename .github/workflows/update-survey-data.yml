@@ -17,6 +17,8 @@ on:
 jobs:
   combine-surveys:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to commit and push changes
     
     steps:
       - name: Checkout repository
