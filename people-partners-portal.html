@@ -326,7 +326,7 @@
     <script>
         // Fetch survey data and create charts
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('./surveyData.json?cache=' + Date.now())
+            fetch('./combinedSurveyData.json?cache=' + Date.now())
                 .then(response => response.json())
                 .then(data => {
                     createTrainingChart(data);
