@@ -420,10 +420,22 @@
             
             // Wait for loadSurveyData to complete before re-enabling button
             loadSurveyData()
+                .then(() => {
+                    // Success - return to normal state
+                    button.innerHTML = '🔄 Refresh Now';
+                })
+                .catch(() => {
+                    // Error - show error state briefly
+                    button.innerHTML = '❌ Refresh Failed';
+                    button.style.backgroundColor = '#ff6b6b';
+                    setTimeout(() => {
+                        button.innerHTML = '🔄 Refresh Now';
+                        button.style.backgroundColor = '#5B7FFF';
+                    }, 2000);
+                })
                 .finally(() => {
                     // Re-enable button after data loading completes
                     button.disabled = false;
-                    button.innerHTML = '🔄 Refresh Now';
                 });
         }
 
