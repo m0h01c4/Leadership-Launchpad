@@ -1,0 +1,44 @@
+name: Update Survey Data
+
+on:
+  push:
+    paths:
+      - 'surveyData*.json'
+      - '!surveyData.json'
+  workflow_dispatch:
+
+jobs:
+  combine-survey-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      
+      - name: Run survey data combination script
+        run: npm run combine-surveys
+      
+      - name: Check for changes
+        id: check_changes
+        run: |
+          if git diff --quiet surveyData.json; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+      
+      - name: Commit and push updated surveyData.json
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add surveyData.json
+          git commit -m "Auto-update combined survey data"
+          git push

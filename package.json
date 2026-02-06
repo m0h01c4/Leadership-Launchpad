@@ -1,0 +1,25 @@
+{
+  "name": "leadership-launchpad",
+  "version": "1.0.0",
+  "description": "Leadership Launchpad - People Partner Portal with Survey Data Management",
+  "main": "index.html",
+  "scripts": {
+    "combine-surveys": "node scripts/fetchSurveyData.js",
+    "update-survey-data": "node scripts/fetchSurveyData.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m0h01c4/Leadership-Launchpad"
+  },
+  "keywords": [
+    "leadership",
+    "training",
+    "survey",
+    "portal"
+  ],
+  "author": "Michelle Acevedo",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

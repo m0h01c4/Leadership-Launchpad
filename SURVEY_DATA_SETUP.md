@@ -67,7 +67,13 @@ Each survey data file should follow this JSON structure:
 
 #### Manual Execution
 
-Run the script manually using Node.js:
+Run the script manually using npm (recommended):
+
+```bash
+npm run combine-surveys
+```
+
+Or directly with Node.js:
 
 ```bash
 node scripts/fetchSurveyData.js
@@ -79,9 +85,18 @@ The script will:
 - Combine the data by summing all numeric values
 - Write the combined result to `surveyData.json`
 
-#### Via GitHub Actions (if configured)
+#### Via GitHub Actions (Automated)
 
-If you have a GitHub Actions workflow set up, it can automatically run the script when new survey data files are pushed to the repository.
+A GitHub Actions workflow is configured to automatically run the combination script whenever new survey data files are pushed to the repository.
+
+**How it works:**
+1. Upload a new `surveyDataN.json` file (e.g., `surveyData3.json`)
+2. Commit and push the file to the repository
+3. GitHub Actions automatically runs the script
+4. The combined `surveyData.json` is updated and committed back
+
+**Manual trigger:**
+You can also manually trigger the workflow from the GitHub Actions tab in the repository.
 
 ## How the Combination Works
 
