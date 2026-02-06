@@ -195,8 +195,8 @@
                 </div>
 
                 <!-- Training Needs Chart -->
-                <div class="chart-container">
-                    <h3 class="chart-title">Areas Requiring Further Training</h3>
+                <div class="chart-container" style="height: 600px;">
+                    <h3 class="chart-title">Training Gaps</h3>
                     <canvas id="trainingNeedsChart"></canvas>
                 </div>
             </div>
@@ -494,7 +494,7 @@
                 options: {
                     indexAxis: 'y',
                     responsive: true,
-                    maintainAspectRatio: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             display: false
