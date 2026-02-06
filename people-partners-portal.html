@@ -353,7 +353,7 @@
             // - Query parameter (?t=) prevents URL caching
             // - cache: 'no-store' prevents Fetch API caching
             // - Headers provide additional insurance against HTTP caching
-            fetch('./surveyData.json?t=' + timestamp, {
+            return fetch('./surveyData.json?t=' + timestamp, {
                 cache: 'no-store',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
@@ -418,13 +418,13 @@
             button.disabled = true;
             button.innerHTML = '🔄 Refreshing...';
             
-            loadSurveyData();
-            
-            // Re-enable button after a short delay
-            setTimeout(() => {
-                button.disabled = false;
-                button.innerHTML = '🔄 Refresh Now';
-            }, 1000);
+            // Wait for loadSurveyData to complete before re-enabling button
+            loadSurveyData()
+                .finally(() => {
+                    // Re-enable button after data loading completes
+                    button.disabled = false;
+                    button.innerHTML = '🔄 Refresh Now';
+                });
         }
 
         // Auto-refresh data every 5 minutes (300000ms)
