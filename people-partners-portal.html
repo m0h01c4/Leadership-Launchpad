@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>People Partner Portal | Leadership Launchpad</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -182,6 +185,13 @@
                     </a>
                 </div>
                 
+                <!-- Last Updated Indicator -->
+                <div style="text-align: center; margin: 20px 0; padding: 10px; background-color: #f0f4ff; border-radius: 8px;">
+                    <p style="margin: 0; color: #5B7FFF; font-size: 14px;">
+                        <strong>📊 Data Last Updated:</strong> <span id="lastUpdated">Loading...</span>
+                    </p>
+                </div>
+
                 <!-- Training Attended and Effectiveness Charts Row -->
                 <div class="charts-row">
                     <!-- Training Attended Chart -->
@@ -329,20 +339,84 @@
     <script>
         // Fetch survey data and create charts
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('./combinedSurveyData.json?cache=' + Date.now())
-                .then(response => response.json())
+            // Load data initially
+            loadSurveyData();
+        });
+
+        // Function to load survey data
+        function loadSurveyData() {
+            const timestamp = new Date().getTime();
+            fetch('./combinedSurveyData.json?t=' + timestamp, {
+                cache: 'no-store',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     createTrainingChart(data);
                     createEffectivenessChart(data);
                     createTrainingNeedsChart(data);
+                    updateLastUpdatedTime();
                 })
-                .catch(error => console.error('Error loading survey data:', error));
+                .catch(error => {
+                    console.error('Error loading survey data:', error);
+                    displayDataLoadError();
+                });
+        }
+
+        // Update the last updated timestamp
+        function updateLastUpdatedTime() {
+            const now = new Date();
+            const formattedTime = now.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                hour12: true
+            });
+            document.getElementById('lastUpdated').textContent = formattedTime;
+        }
+
+        // Display error message if data fails to load
+        function displayDataLoadError() {
+            const lastUpdatedElement = document.getElementById('lastUpdated');
+            if (lastUpdatedElement) {
+                lastUpdatedElement.textContent = 'Error loading data';
+                lastUpdatedElement.style.color = '#ff0000';
+            }
+        }
+
+        // Reload data when page becomes visible (user switches back to tab)
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                console.log('Page visible - refreshing data');
+                loadSurveyData();
+            }
         });
+
+        // Store chart instances to allow destruction on reload
+        let trainingChartInstance = null;
+        let effectivenessChartInstance = null;
+        let trainingNeedsChartInstance = null;
 
         // Training Attended Doughnut Chart
         function createTrainingChart(data) {
+            // Destroy existing chart if it exists
+            if (trainingChartInstance) {
+                trainingChartInstance.destroy();
+            }
+            
             const ctx = document.getElementById('trainingChart').getContext('2d');
-            new Chart(ctx, {
+            trainingChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
                     labels: ['New Leaders', 'Leading Individual Contributors', 'Leading Leaders'],
@@ -385,8 +459,13 @@
 
         // Effectiveness Rating Bar Chart
         function createEffectivenessChart(data) {
+            // Destroy existing chart if it exists
+            if (effectivenessChartInstance) {
+                effectivenessChartInstance.destroy();
+            }
+            
             const ctx = document.getElementById('effectivenessChart').getContext('2d');
-            new Chart(ctx, {
+            effectivenessChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: ['Very Effective', 'Somewhat Effective', 'Neutral', 'Somewhat Ineffective', 'Neither'],
@@ -433,8 +512,13 @@
 
         // Training Needs Vertical Bar Chart
         function createTrainingNeedsChart(data) {
+            // Destroy existing chart if it exists
+            if (trainingNeedsChartInstance) {
+                trainingNeedsChartInstance.destroy();
+            }
+            
             const ctx = document.getElementById('trainingNeedsChart').getContext('2d');
-            new Chart(ctx, {
+            trainingNeedsChartInstance = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: [
