@@ -346,7 +346,7 @@
         // Function to load survey data
         function loadSurveyData() {
             const timestamp = new Date().getTime();
-            fetch('./combinedSurveyData.json?t=' + timestamp, {
+            fetch('./surveyData.json?t=' + timestamp, {
                 cache: 'no-store',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
