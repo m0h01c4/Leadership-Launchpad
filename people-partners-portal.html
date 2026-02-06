@@ -182,20 +182,23 @@
                     </a>
                 </div>
                 
-                <!-- Training Attended Chart -->
-                <div class="chart-container">
-                    <h3 class="chart-title">Training Attended</h3>
-                    <canvas id="trainingChart"></canvas>
+                <!-- Training Attended and Effectiveness Charts Row -->
+                <div class="charts-row">
+                    <!-- Training Attended Chart -->
+                    <div class="chart-container">
+                        <h3 class="chart-title">Training Attended</h3>
+                        <canvas id="trainingChart"></canvas>
+                    </div>
+
+                    <!-- Effectiveness Chart -->
+                    <div class="chart-container">
+                        <h3 class="chart-title">How Effective Was the Training?</h3>
+                        <canvas id="effectivenessChart"></canvas>
+                    </div>
                 </div>
 
-                <!-- Effectiveness Chart -->
-                <div class="chart-container">
-                    <h3 class="chart-title">How Effective Was the Training?</h3>
-                    <canvas id="effectivenessChart"></canvas>
-                </div>
-
-                <!-- Training Needs Chart -->
-                <div class="chart-container" style="height: 600px;">
+                <!-- Training Needs Chart (Full Width) -->
+                <div class="chart-container-full">
                     <h3 class="chart-title">Training Gaps</h3>
                     <canvas id="trainingNeedsChart"></canvas>
                 </div>
@@ -428,7 +431,7 @@
             });
         }
 
-        // Training Needs Horizontal Bar Chart
+        // Training Needs Vertical Bar Chart
         function createTrainingNeedsChart(data) {
             const ctx = document.getElementById('trainingNeedsChart').getContext('2d');
             new Chart(ctx, {
@@ -492,19 +495,25 @@
                     }]
                 },
                 options: {
-                    indexAxis: 'y',
                     responsive: true,
-                    maintainAspectRatio: false,
+                    maintainAspectRatio: true,
                     plugins: {
                         legend: {
                             display: false
                         }
                     },
                     scales: {
-                        x: {
+                        y: {
                             beginAtZero: true,
                             ticks: {
                                 stepSize: 1
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                autoSkip: false,
+                                maxRotation: 45,
+                                minRotation: 45
                             }
                         }
                     }
