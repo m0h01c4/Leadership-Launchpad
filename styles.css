@@ -1322,6 +1322,37 @@ body {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
+/* Container for side-by-side charts */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  margin: 60px 0 0;
+}
+
+.charts-row .chart-container {
+  margin: 0;
+  max-width: none;
+}
+
+/* Full-width chart container */
+.chart-container-full {
+  width: 100%;
+  max-width: none;
+  margin: 60px 0 0;
+  padding: 40px;
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Responsive: Stack charts on smaller screens */
+@media (max-width: 1024px) {
+  .charts-row {
+    grid-template-columns: 1fr;
+  }
+}
+
 .chart-title {
   text-align: center;
   font-size: 20px;
