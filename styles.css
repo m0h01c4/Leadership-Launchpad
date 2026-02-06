@@ -1034,6 +1034,10 @@ body {
   .mission-content {
     padding: 30px;
   }
+
+  .mission-buttons {
+    flex-wrap: wrap;
+  }
 }
 
 @media (max-width: 480px) {
@@ -1102,6 +1106,15 @@ body {
 
   .mission-content {
     padding: 20px;
+  }
+
+  .mission-buttons {
+    flex-wrap: wrap;
+  }
+
+  .dashboard-btn {
+    width: 100%;
+    max-width: 300px;
   }
 }
 
