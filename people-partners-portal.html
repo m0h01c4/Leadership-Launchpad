@@ -350,7 +350,7 @@
             // - Query parameter (?t=) prevents URL caching
             // - cache: 'no-store' prevents Fetch API caching
             // - Headers provide additional insurance against HTTP caching
-            return fetch('./combinedsurveydata.json?t=' + timestamp, {
+            return fetch('./combinedSurveyData.json?t=' + timestamp, {
                 cache: 'no-store',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
