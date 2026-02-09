@@ -2,26 +2,26 @@
 
 ## Quick Commands
 
-### Combine Survey Data
+### Process Survey Data
 ```bash
-npm run combine-surveys
+npm run fetch-survey-data
 ```
 
 ### Files Location
-- Input files: `surveyData1.json`, `surveyData2.json`, etc. (in root directory)
-- Output file: `surveyData.json` (automatically updated)
+- Input file: `surveyData1.json` (in root directory or configured location)
+- Output file: `combinedSurveyData.json` (automatically updated)
 
 ## How It Works
 
-1. **Add new survey data**: Upload `surveyDataN.json` to repository root
-2. **Run script**: Execute `npm run combine-surveys` or let GitHub Actions run automatically
-3. **Result**: `surveyData.json` updated with combined data
+1. **Update survey data**: Modify `surveyData1.json` with Leader Academy survey responses
+2. **Run script**: Execute `npm run fetch-survey-data` or let GitHub Actions run automatically
+3. **Result**: `combinedSurveyData.json` updated with processed data
 
 ## Automatic Updates
 
-GitHub Actions will automatically run the combination script when you:
-- Push a new `surveyDataN.json` file to the repository
-- The workflow can also be triggered manually from the Actions tab
+GitHub Actions will automatically run the processing script:
+- Daily at midnight UTC
+- Can be triggered manually from the Actions tab
 
 ## Need More Info?
 

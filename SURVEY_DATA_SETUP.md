@@ -11,10 +11,10 @@ The Leadership Launchpad uses an automated system to fetch survey data from two 
 ### 1. Survey Data Fetching Script (`scripts/fetchSurveyData.js`)
 
 The main Node.js script that:
-- Fetches data from two separate survey sources
+- Fetches data from the Leader Academy survey source
 - Validates the data structure
-- Combines numeric responses by adding values from both surveys
-- Writes the combined data to `surveyData.json`
+- Processes the survey responses
+- Writes the data to `combinedSurveyData.json`
 - Includes error handling and fallback mechanisms
 - Supports both API and file-based data sources
 
@@ -31,8 +31,7 @@ Automated workflow that:
 
 ### 3. Example Data Files
 
-- `scripts/surveyData1.example.json` - Example format for first survey
-- `scripts/surveyData2.example.json` - Example format for second survey
+- `scripts/surveyData1.example.json` - Example format for Leader Academy survey
 
 ## Data Structure
 
@@ -72,10 +71,9 @@ The script uses the following environment variables:
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
 | `DATA_SOURCE_TYPE` | Data source type: `api` or `file` | `file` | No |
-| `SURVEY_1_URL` | URL or file path for first survey | `scripts/surveyData1.example.json` | No |
-| `SURVEY_2_URL` | URL or file path for second survey | `scripts/surveyData2.example.json` | No |
+| `SURVEY_1_URL` | URL or file path for Leader Academy survey | `scripts/surveyData1.example.json` | No |
 | `MS_FORMS_API_KEY` | API key/token for Microsoft Forms/Graph API | None | Only if using API |
-| `OUTPUT_PATH` | Output path for surveyData.json | `./surveyData.json` | No |
+| `OUTPUT_PATH` | Output path for combinedSurveyData.json | `./combinedSurveyData.json` | No |
 | `FALLBACK_ON_ERROR` | Keep existing data on error | `true` | No |
 
 ### GitHub Secrets
@@ -95,14 +93,9 @@ To use the automated workflow with real survey data, configure these secrets in 
 #### Optional Secrets (Override defaults)
 
 - **`SURVEY_1_URL`**
-  - Description: URL or path to first survey data source
+  - Description: URL or path to Leader Academy survey data source
   - Example (API): `https://graph.microsoft.com/v1.0/forms/{form-id}/responses`
   - Example (File): `scripts/surveyData1.json`
-
-- **`SURVEY_2_URL`**
-  - Description: URL or path to second survey data source
-  - Example (API): `https://graph.microsoft.com/v1.0/forms/{form-id}/responses`
-  - Example (File): `scripts/surveyData2.json`
 
 ## Microsoft Forms API Credentials
 
@@ -150,9 +143,8 @@ To access Microsoft Forms data via the Microsoft Graph API:
    - Open your Microsoft Forms
    - The Form ID is in the URL: `https://forms.office.com/Pages/DesignPage.aspx?...&id={FORM-ID}`
 
-7. **Construct API URLs**
-   - Survey 1 URL: `https://graph.microsoft.com/v1.0/forms/{form-id-1}/responses`
-   - Survey 2 URL: `https://graph.microsoft.com/v1.0/forms/{form-id-2}/responses`
+7. **Construct API URL**
+   - Survey URL: `https://graph.microsoft.com/v1.0/forms/{form-id}/responses`
 
 ### Option 2: Export JSON Files (Simpler Alternative)
 
@@ -164,10 +156,10 @@ If API access is complex, you can use exported JSON files:
    - Click **Open in Excel** to download responses
    - Convert Excel data to JSON format matching the expected structure
 
-2. **Place JSON Files**
-   - Save as `scripts/surveyData1.json` and `scripts/surveyData2.json`
-   - Ensure the files match the structure in the example files
-   - The script will read from these files instead of APIs
+2. **Place JSON File**
+   - Save as `scripts/surveyData1.json`
+   - Ensure the file matches the structure in the example file
+   - The script will read from this file instead of API
 
 3. **Update Configuration**
    - Set `DATA_SOURCE_TYPE=file` (default)
@@ -178,8 +170,8 @@ If API access is complex, you can use exported JSON files:
 If you have direct Microsoft Forms API access:
 
 1. Obtain API credentials from Microsoft Forms
-2. Get form IDs for both surveys
-3. Use endpoints: `https://forms.office.com/formapi/api/{form-id}/...`
+2. Get form ID for the Leader Academy survey
+3. Use endpoint: `https://forms.office.com/formapi/api/{form-id}/...`
 4. Store API key in `MS_FORMS_API_KEY` secret
 
 ## Usage
@@ -194,9 +186,9 @@ If you have direct Microsoft Forms API access:
 6. Click **Run workflow**
 
 The workflow will:
-- Fetch data from both survey sources
-- Combine the data
-- Update `surveyData.json`
+- Fetch data from the Leader Academy survey source
+- Process the data
+- Update `combinedSurveyData.json`
 - Commit and push changes if any
 
 ### Scheduled Automatic Updates
@@ -228,11 +220,10 @@ To test the script locally:
    npm run fetch-survey-data
    ```
 
-3. **Test with custom file paths**
+3. **Test with custom file path**
    ```bash
    DATA_SOURCE_TYPE=file \
    SURVEY_1_URL=./path/to/survey1.json \
-   SURVEY_2_URL=./path/to/survey2.json \
    npm run fetch-survey-data
    ```
 
@@ -240,7 +231,6 @@ To test the script locally:
    ```bash
    DATA_SOURCE_TYPE=api \
    SURVEY_1_URL=https://api.example.com/survey1 \
-   SURVEY_2_URL=https://api.example.com/survey2 \
    MS_FORMS_API_KEY=your_api_key_here \
    npm run fetch-survey-data
    ```
@@ -250,19 +240,18 @@ To test the script locally:
    OUTPUT_PATH=/tmp/testOutput.json npm run fetch-survey-data
    ```
 
-## Data Combination Logic
+## Data Processing Logic
 
-The script combines data from both surveys by:
+The script processes data from the Leader Academy survey by:
 
-1. **Adding numeric values**: Each field value from Survey 1 is added to the corresponding field value from Survey 2
-2. **Safe addition**: Non-numeric or missing values are treated as 0
+1. **Validating structure**: Ensures the data matches the expected JSON format
+2. **Safe value handling**: Non-numeric or missing values are treated as 0
 3. **Structure preservation**: The output maintains the same JSON structure
 
 **Example:**
 ```
-Survey 1: { "trainingAttended": { "newLeaders": 2 } }
-Survey 2: { "trainingAttended": { "newLeaders": 1 } }
-Combined: { "trainingAttended": { "newLeaders": 3 } }
+Input Survey: { "trainingAttended": { "newLeaders": 2 } }
+Processed Output: { "trainingAttended": { "newLeaders": 2 } }
 ```
 
 ## Error Handling
@@ -310,10 +299,10 @@ The script includes robust error handling:
 
 ## Chart Integration
 
-The `surveyData.json` file is automatically loaded by the People Partner Portal (`people-partners-portal.html`):
+The `combinedSurveyData.json` file is automatically loaded by the People Partner Portal (`people-partners-portal.html`):
 
 ```javascript
-fetch('./surveyData.json?cache=' + Date.now())
+fetch('./combinedSurveyData.json?cache=' + Date.now())
   .then(response => response.json())
   .then(data => {
     createTrainingChart(data);
@@ -322,7 +311,7 @@ fetch('./surveyData.json?cache=' + Date.now())
   });
 ```
 
-The charts automatically update when `surveyData.json` changes.
+The charts automatically update when `combinedSurveyData.json` changes.
 
 ## Security Considerations
 

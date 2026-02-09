@@ -3,15 +3,14 @@
 /**
  * Leadership Launchpad Survey Data Fetching Script
  * 
- * This script fetches survey data from two Microsoft Forms sources,
- * combines the numeric responses, and updates surveyData.json.
+ * This script fetches survey data from the Leader Academy feedback survey,
+ * validates and processes the responses.
  * 
  * Configuration via environment variables:
  * - DATA_SOURCE_TYPE: 'api' (Microsoft Forms/Graph API) or 'file' (local JSON files)
- * - SURVEY_1_URL: URL or file path for first survey data
- * - SURVEY_2_URL: URL or file path for second survey data
+ * - SURVEY_1_URL: URL or file path for Leader Academy survey data
  * - MS_FORMS_API_KEY: API key for Microsoft Forms (if using API)
- * - OUTPUT_PATH: Path to output surveyData.json (default: ./surveyData.json)
+ * - OUTPUT_PATH: Path to output combinedSurveyData.json (default: ./combinedSurveyData.json)
  */
 
 const fs = require('fs').promises;
@@ -22,9 +21,8 @@ const axios = require('axios');
 const CONFIG = {
   dataSourceType: process.env.DATA_SOURCE_TYPE || 'file',
   survey1Source: process.env.SURVEY_1_URL || path.join(__dirname, 'surveyData1.example.json'),
-  survey2Source: process.env.SURVEY_2_URL || path.join(__dirname, 'surveyData2.example.json'),
   apiKey: process.env.MS_FORMS_API_KEY || '',
-  outputPath: process.env.OUTPUT_PATH || path.join(__dirname, '..', 'surveyData.json'),
+  outputPath: process.env.OUTPUT_PATH || path.join(__dirname, '..', 'combinedSurveyData.json'),
   fallbackOnError: process.env.FALLBACK_ON_ERROR !== 'false' // Default to true
 };
 
@@ -167,45 +165,34 @@ async function fetchSurveyData(source) {
 }
 
 /**
- * Combine two survey data objects by adding their numeric values
+ * Process single survey data - just return it as is
  */
-function combineSurveyData(data1, data2) {
-  console.log('Combining survey data from both sources...');
-  const combined = initializeDataStructure();
+function processSurveyData(data1) {
+  console.log('Processing Leader Academy survey data...');
+  const processed = initializeDataStructure();
 
-  // Helper function to safely add values
-  const safeAdd = (val1, val2) => {
-    const num1 = typeof val1 === 'number' ? val1 : 0;
-    const num2 = typeof val2 === 'number' ? val2 : 0;
-    return num1 + num2;
+  // Helper function to safely get values
+  const safeGet = (val) => {
+    return typeof val === 'number' ? val : 0;
   };
 
-  // Combine trainingAttended
-  for (const key in combined.trainingAttended) {
-    combined.trainingAttended[key] = safeAdd(
-      data1.trainingAttended?.[key],
-      data2.trainingAttended?.[key]
-    );
+  // Copy trainingAttended
+  for (const key in processed.trainingAttended) {
+    processed.trainingAttended[key] = safeGet(data1.trainingAttended?.[key]);
   }
 
-  // Combine effectiveness
-  for (const key in combined.effectiveness) {
-    combined.effectiveness[key] = safeAdd(
-      data1.effectiveness?.[key],
-      data2.effectiveness?.[key]
-    );
+  // Copy effectiveness
+  for (const key in processed.effectiveness) {
+    processed.effectiveness[key] = safeGet(data1.effectiveness?.[key]);
   }
 
-  // Combine trainingNeeds
-  for (const key in combined.trainingNeeds) {
-    combined.trainingNeeds[key] = safeAdd(
-      data1.trainingNeeds?.[key],
-      data2.trainingNeeds?.[key]
-    );
+  // Copy trainingNeeds
+  for (const key in processed.trainingNeeds) {
+    processed.trainingNeeds[key] = safeGet(data1.trainingNeeds?.[key]);
   }
 
-  console.log('✓ Successfully combined survey data');
-  return combined;
+  console.log('✓ Successfully processed Leader Academy survey data');
+  return processed;
 }
 
 /**
@@ -244,31 +231,27 @@ async function main() {
   console.log('Leadership Launchpad Survey Data Fetch');
   console.log('='.repeat(60));
   console.log(`Data Source Type: ${CONFIG.dataSourceType}`);
-  console.log(`Survey 1 Source: ${CONFIG.survey1Source}`);
-  console.log(`Survey 2 Source: ${CONFIG.survey2Source}`);
+  console.log(`Survey Source: ${CONFIG.survey1Source}`);
   console.log(`Output Path: ${CONFIG.outputPath}`);
   console.log(`Fallback on Error: ${CONFIG.fallbackOnError}`);
   console.log('='.repeat(60));
 
   try {
-    // Fetch data from both sources
-    console.log('\nFetching survey data...');
-    const [surveyData1, surveyData2] = await Promise.all([
-      fetchSurveyData(CONFIG.survey1Source),
-      fetchSurveyData(CONFIG.survey2Source)
-    ]);
+    // Fetch data from Leader Academy survey only
+    console.log('\nFetching Leader Academy survey data...');
+    const surveyData1 = await fetchSurveyData(CONFIG.survey1Source);
 
-    // Combine the data
-    const combinedData = combineSurveyData(surveyData1, surveyData2);
+    // Process the data
+    const processedData = processSurveyData(surveyData1);
 
     // Write to output file
-    await writeOutputFile(combinedData);
+    await writeOutputFile(processedData);
 
     console.log('\n' + '='.repeat(60));
     console.log('✓ Survey data update completed successfully!');
     console.log('='.repeat(60));
-    console.log('\nCombined Data Summary:');
-    console.log(JSON.stringify(combinedData, null, 2));
+    console.log('\nProcessed Data Summary:');
+    console.log(JSON.stringify(processedData, null, 2));
     
     process.exit(0);
   } catch (error) {
@@ -304,7 +287,7 @@ if (require.main === module) {
 
 module.exports = {
   fetchSurveyData,
-  combineSurveyData,
+  processSurveyData,
   initializeDataStructure,
   validateSurveyData
 };
