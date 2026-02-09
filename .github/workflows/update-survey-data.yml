@@ -42,8 +42,7 @@ jobs:
       - name: Run survey data fetch script
         env:
           DATA_SOURCE_TYPE: ${{ github.event.inputs.data_source_type || 'file' }}
-          SURVEY_1_URL: ${{ secrets.SURVEY_1_URL || 'scripts/surveyData1.example.json' }}
-          SURVEY_2_URL: ${{ secrets.SURVEY_2_URL || 'scripts/surveyData2.example.json' }}
+          SURVEY_URL: ${{ secrets.SURVEY_URL || secrets.SURVEY_1_URL || 'scripts/surveyData1.example.json' }}
           MS_FORMS_API_KEY: ${{ secrets.MS_FORMS_API_KEY }}
           FALLBACK_ON_ERROR: 'true'
         run: npm run fetch-survey-data
@@ -51,17 +50,17 @@ jobs:
       - name: Check for changes
         id: git-check
         run: |
-          git diff --exit-code surveyData.json || echo "changed=true" >> $GITHUB_OUTPUT
+          git diff --exit-code combinedSurveyData.json || echo "changed=true" >> $GITHUB_OUTPUT
       
       - name: Commit and push changes
         if: steps.git-check.outputs.changed == 'true'
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add surveyData.json
+          git add combinedSurveyData.json
           git commit -m "chore: update survey data [automated]"
           git push
       
       - name: No changes detected
         if: steps.git-check.outputs.changed != 'true'
-        run: echo "No changes to surveyData.json - skipping commit"
+        run: echo "No changes to combinedSurveyData.json - skipping commit"
