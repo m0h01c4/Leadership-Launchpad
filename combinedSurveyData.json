@@ -13,20 +13,19 @@
   },
   "trainingNeeds": {
     "communication": 3,
-    "decisionMaking": 2,
+    "decisionMakingProblemSolving": 2,
     "teamBuilding": 2,
-    "healthyconflict": 1,
+    "healthyConflict": 1,
     "strategicThinking": 2,
-    "feedback&coaching": 0,
-    "developmentownership&IDP": 0,
-    "careerconversations": 0,
-    "emotnoalintelligence&self-awareness": 0,
-    "personalbrand&presence": 0,
-    "navigatinghcnage&ambiguity": 0,
-    "influcence&persuasion": 0,
+    "feedbackCoaching": 0,
+    "developmentOwnershipIDP": 0,
+    "careerConversations": 0,
+    "emotionalIntelligenceSelfAwareness": 0,
+    "personalBrandPresence": 0,
+    "navigatingChangeAmbiguity": 0,
+    "influencePersuasion": 0,
     "negotiations": 0,
-    "rest&resilience": 0,
-    "careernavigation": 0,
-    "other": 0
+    "restResilience": 0,
+    "careerNavigation": 0
   }
 }
