@@ -296,6 +296,7 @@
             document.body.style.overflow = 'auto';
         }
 
+
         function verifyUserId() {
             const userIdInput = document.getElementById('userIdInput');
             const errorMessage = document.getElementById('errorMessage');
@@ -349,7 +350,7 @@
             // - Query parameter (?t=) prevents URL caching
             // - cache: 'no-store' prevents Fetch API caching
             // - Headers provide additional insurance against HTTP caching
-            return fetch('./combinedSurveyData.json?t=' + timestamp, {
+            return fetch('./surveyData.json?t=' + timestamp, {
                 cache: 'no-store',
                 headers: {
                     'Cache-Control': 'no-cache, no-store, must-revalidate',
