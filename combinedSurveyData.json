@@ -1,31 +1,32 @@
 {
   "trainingAttended": {
-    "newLeaders": 2,
-    "leadingIndividualContributors": 1,
+    "newLeaders": 3,
+    "leadingIndividualContributors": 2,
     "leadingLeaders": 1
   },
   "effectiveness": {
-    "veryEffective": 3,
-    "somewhatEffective": 0,
+    "veryEffective": 4,
+    "somewhatEffective": 1,
     "neutral": 0,
     "somewhatIneffective": 0,
     "neitherEffectiveNorIneffective": 1
   },
   "trainingNeeds": {
-    "communication": 2,
-    "decisionMakingProblemSolving": 1,
-    "teamBuilding": 1,
-    "healthyConflict": 0,
-    "strategicThinking": 1,
-    "feedbackCoaching": 0,
-    "developmentOwnershipIDP": 0,
-    "careerConversations": 0,
-    "emotionalIntelligenceSelfAwareness": 0,
-    "personalBrandPresence": 0,
-    "navigatingChangeAmbiguity": 0,
-    "influencePersuasion": 0,
+    "communication": 3,
+    "decisionMaking": 2,
+    "teamBuilding": 2,
+    "healthyconflict": 1,
+    "strategicThinking": 2,
+    "feedback&coaching": 0,
+    "developmentownership&IDP": 0,
+    "careerconversations": 0,
+    "emotnoalintelligence&self-awareness": 0,
+    "personalbrand&presence": 0,
+    "navigatinghcnage&ambiguity": 0,
+    "influcence&persuasion": 0,
     "negotiations": 0,
-    "restResilience": 0,
-    "careerNavigation": 0
+    "rest&resilience": 0,
+    "careernavigation": 0,
+    "other": 0
   }
 }
