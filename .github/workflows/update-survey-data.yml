@@ -42,7 +42,7 @@ jobs:
       - name: Run survey data fetch script
         env:
           DATA_SOURCE_TYPE: ${{ github.event.inputs.data_source_type || 'file' }}
-          SURVEY_1_URL: ${{ secrets.SURVEY_1_URL || 'scripts/surveyData1.example.json' }}
+          SURVEY_URL: ${{ secrets.SURVEY_URL || secrets.SURVEY_1_URL || 'scripts/surveyData1.example.json' }}
           MS_FORMS_API_KEY: ${{ secrets.MS_FORMS_API_KEY }}
           FALLBACK_ON_ERROR: 'true'
         run: npm run fetch-survey-data

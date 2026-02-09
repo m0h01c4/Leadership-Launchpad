@@ -71,7 +71,7 @@ The script uses the following environment variables:
 | Variable | Description | Default | Required |
 |----------|-------------|---------|----------|
 | `DATA_SOURCE_TYPE` | Data source type: `api` or `file` | `file` | No |
-| `SURVEY_1_URL` | URL or file path for Leader Academy survey | `scripts/surveyData1.example.json` | No |
+| `SURVEY_URL` | URL or file path for Leader Academy survey (also accepts `SURVEY_1_URL` for backward compatibility) | `scripts/surveyData1.example.json` | No |
 | `MS_FORMS_API_KEY` | API key/token for Microsoft Forms/Graph API | None | Only if using API |
 | `OUTPUT_PATH` | Output path for combinedSurveyData.json | `./combinedSurveyData.json` | No |
 | `FALLBACK_ON_ERROR` | Keep existing data on error | `true` | No |
@@ -92,10 +92,11 @@ To use the automated workflow with real survey data, configure these secrets in 
 
 #### Optional Secrets (Override defaults)
 
-- **`SURVEY_1_URL`**
+- **`SURVEY_URL`**
   - Description: URL or path to Leader Academy survey data source
   - Example (API): `https://graph.microsoft.com/v1.0/forms/{form-id}/responses`
   - Example (File): `scripts/surveyData1.json`
+  - Note: `SURVEY_1_URL` is also supported for backward compatibility
 
 ## Microsoft Forms API Credentials
 
@@ -223,14 +224,14 @@ To test the script locally:
 3. **Test with custom file path**
    ```bash
    DATA_SOURCE_TYPE=file \
-   SURVEY_1_URL=./path/to/survey1.json \
+   SURVEY_URL=./path/to/survey.json \
    npm run fetch-survey-data
    ```
 
 4. **Test with API (requires credentials)**
    ```bash
    DATA_SOURCE_TYPE=api \
-   SURVEY_1_URL=https://api.example.com/survey1 \
+   SURVEY_URL=https://api.example.com/survey \
    MS_FORMS_API_KEY=your_api_key_here \
    npm run fetch-survey-data
    ```

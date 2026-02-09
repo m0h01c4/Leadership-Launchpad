@@ -8,7 +8,7 @@
  * 
  * Configuration via environment variables:
  * - DATA_SOURCE_TYPE: 'api' (Microsoft Forms/Graph API) or 'file' (local JSON files)
- * - SURVEY_1_URL: URL or file path for Leader Academy survey data
+ * - SURVEY_URL: URL or file path for Leader Academy survey data (also accepts SURVEY_1_URL for backward compatibility)
  * - MS_FORMS_API_KEY: API key for Microsoft Forms (if using API)
  * - OUTPUT_PATH: Path to output combinedSurveyData.json (default: ./combinedSurveyData.json)
  */
@@ -20,7 +20,7 @@ const axios = require('axios');
 // Configuration
 const CONFIG = {
   dataSourceType: process.env.DATA_SOURCE_TYPE || 'file',
-  survey1Source: process.env.SURVEY_1_URL || path.join(__dirname, 'surveyData1.example.json'),
+  surveySource: process.env.SURVEY_URL || process.env.SURVEY_1_URL || path.join(__dirname, 'surveyData1.example.json'),
   apiKey: process.env.MS_FORMS_API_KEY || '',
   outputPath: process.env.OUTPUT_PATH || path.join(__dirname, '..', 'combinedSurveyData.json'),
   fallbackOnError: process.env.FALLBACK_ON_ERROR !== 'false' // Default to true
@@ -165,9 +165,9 @@ async function fetchSurveyData(source) {
 }
 
 /**
- * Process single survey data - just return it as is
+ * Process single survey data
  */
-function processSurveyData(data1) {
+function processSurveyData(surveyData) {
   console.log('Processing Leader Academy survey data...');
   const processed = initializeDataStructure();
 
@@ -178,17 +178,17 @@ function processSurveyData(data1) {
 
   // Copy trainingAttended
   for (const key in processed.trainingAttended) {
-    processed.trainingAttended[key] = safeGet(data1.trainingAttended?.[key]);
+    processed.trainingAttended[key] = safeGet(surveyData.trainingAttended?.[key]);
   }
 
   // Copy effectiveness
   for (const key in processed.effectiveness) {
-    processed.effectiveness[key] = safeGet(data1.effectiveness?.[key]);
+    processed.effectiveness[key] = safeGet(surveyData.effectiveness?.[key]);
   }
 
   // Copy trainingNeeds
   for (const key in processed.trainingNeeds) {
-    processed.trainingNeeds[key] = safeGet(data1.trainingNeeds?.[key]);
+    processed.trainingNeeds[key] = safeGet(surveyData.trainingNeeds?.[key]);
   }
 
   console.log('✓ Successfully processed Leader Academy survey data');
@@ -231,7 +231,7 @@ async function main() {
   console.log('Leadership Launchpad Survey Data Fetch');
   console.log('='.repeat(60));
   console.log(`Data Source Type: ${CONFIG.dataSourceType}`);
-  console.log(`Survey Source: ${CONFIG.survey1Source}`);
+  console.log(`Survey Source: ${CONFIG.surveySource}`);
   console.log(`Output Path: ${CONFIG.outputPath}`);
   console.log(`Fallback on Error: ${CONFIG.fallbackOnError}`);
   console.log('='.repeat(60));
@@ -239,10 +239,10 @@ async function main() {
   try {
     // Fetch data from Leader Academy survey only
     console.log('\nFetching Leader Academy survey data...');
-    const surveyData1 = await fetchSurveyData(CONFIG.survey1Source);
+    const leaderAcademySurveyData = await fetchSurveyData(CONFIG.surveySource);
 
     // Process the data
-    const processedData = processSurveyData(surveyData1);
+    const processedData = processSurveyData(leaderAcademySurveyData);
 
     // Write to output file
     await writeOutputFile(processedData);

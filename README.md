@@ -15,7 +15,7 @@ See [SURVEY_DATA_SETUP.md](SURVEY_DATA_SETUP.md) for detailed setup instructions
 
 1. Create a public GitHub Gist with your Leader Academy survey data in JSON format
 2. Get the raw URL from the Gist
-3. Add the URL as a GitHub Secret (`SURVEY_1_URL`)
+3. Add the URL as a GitHub Secret (`SURVEY_URL`)
 4. Run the workflow manually or wait for automatic updates
 
 ## Survey Data Structure
@@ -74,8 +74,8 @@ Each survey JSON file should follow this structure:
 To test the survey data fetching locally:
 
 ```bash
-# Set environment variables
-export SURVEY_1_URL="https://gist.githubusercontent.com/.../surveyData1.json"
+# Set environment variable
+export SURVEY_URL="https://gist.githubusercontent.com/.../surveyData.json"
 
 # Run the script
 npm run fetch-survey-data
