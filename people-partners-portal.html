@@ -204,6 +204,31 @@
         </div>
     </section>
 
+    <!-- Welcome Popup Modal -->
+    <div id="welcomePopup" class="modal" style="display: none;">
+        <div class="modal-content" style="background-color: white; padding: 40px; border-radius: 12px; max-width: 600px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <span class="close" onclick="closeWelcomePopup()" style="position: absolute; top: 20px; right: 30px; font-size: 32px; cursor: pointer; color: #666;">&times;</span>
+            <h2 style="color: #5B7FFF; margin-bottom: 20px; text-align: center;">Welcome to the People Partner Portal!</h2>
+            <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 20px;">
+                Thank you for your commitment to developing our leadership talent. This portal provides you with:
+            </p>
+            <ul style="font-size: 15px; line-height: 1.8; color: #333; margin-bottom: 25px; padding-left: 20px;">
+                <li><strong>Calendar & Important Dates</strong> - Stay on track with key leadership development milestones</li>
+                <li><strong>Resources & Templates</strong> - Access email templates, FAQs, and program materials</li>
+                <li><strong>Survey Access</strong> - Quick links to the Post Leader Academy Survey</li>
+                <li><strong>Data Hub</strong> - View training attendance, effectiveness ratings, and skill gap analysis</li>
+            </ul>
+            <p style="font-size: 15px; line-height: 1.6; color: #333; margin-bottom: 30px; text-align: center; font-style: italic;">
+                Your insights drive our leadership development strategy. Let's build exceptional leaders together!
+            </p>
+            <div style="text-align: center;">
+                <button onclick="closeWelcomePopup()" style="padding: 12px 40px; background-color: #5B7FFF; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s;">
+                    Get Started
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Image Modal -->
     <div id="imageModal" class="modal">
         <span class="close" onclick="closeImageModal()">&times;</span>
@@ -211,6 +236,24 @@
     </div>
 
     <script>
+        // Welcome Popup Functions
+        function openWelcomePopup() {
+          const modal = document.getElementById('welcomePopup');
+          modal.style.display = 'block';
+          document.body.style.overflow = 'hidden';
+        }
+
+        function closeWelcomePopup() {
+          const modal = document.getElementById('welcomePopup');
+          modal.style.display = 'none';
+          document.body.style.overflow = 'auto';
+        }
+
+        // Auto-open welcome popup on page load
+        window.addEventListener('DOMContentLoaded', function() {
+          openWelcomePopup();
+        });
+
         // Image Modal Functions
         function openImageModal(imageSrc) {
           const modal = document.getElementById('imageModal');
@@ -226,18 +269,24 @@
           document.body.style.overflow = 'auto';
         }
 
-        // Close modal when clicking outside the image
+        // Close modals when clicking outside
         window.addEventListener('click', function(event) {
-          const modal = document.getElementById('imageModal');
-          if (event.target === modal) {
+          const imageModal = document.getElementById('imageModal');
+          const welcomeModal = document.getElementById('welcomePopup');
+          
+          if (event.target === imageModal) {
             closeImageModal();
+          }
+          if (event.target === welcomeModal) {
+            closeWelcomePopup();
           }
         });
 
-        // Close modal with Escape key
+        // Close modals with Escape key
         window.addEventListener('keydown', function(event) {
           if (event.key === 'Escape') {
             closeImageModal();
+            closeWelcomePopup();
           }
         });
 
