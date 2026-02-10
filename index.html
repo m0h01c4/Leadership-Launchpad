@@ -13,7 +13,7 @@
             <div class="header-title">
                 <h1>Experience Leadership Launchpad</h1>
             </div>
-            <button class="portal-btn" onclick="window.location.href='people-partners-portal.html'">People Partner Portal</button>
+            <button class="portal-btn" onclick="openPortalModal()">People Partner Portal</button>
         </div>
     </header>
 
@@ -204,7 +204,17 @@
         </div>
     </section>
 
-
+    <!-- Portal Modal -->
+    <div id="portalModal" class="portal-modal">
+        <div class="portal-modal-content">
+            <span class="portal-close" onclick="closePortalModal()">&times;</span>
+            <h2>People Partner Portal</h2>
+            <p>Please enter your User ID:</p>
+            <input type="text" id="userIdInput" placeholder="Enter User ID" class="user-id-input">
+            <button class="verify-btn" onclick="verifyUserID()">Verify</button>
+            <p id="errorMsg" class="error-msg"></p>
+        </div>
+    </div>
 
     <!-- Image Modal -->
     <div id="imageModal" class="modal">
@@ -217,7 +227,9 @@
         function openImageModal(imageSrc) {
           const modal = document.getElementById('imageModal');
           const modalImage = document.getElementById('modalImage');
-          modalImage.src = imageSrc;
+          // Add cache-busting timestamp to force fresh image load
+          const timestamp = new Date().getTime();
+          modalImage.src = imageSrc + '?t=' + timestamp;
           modal.style.display = 'block';
           document.body.style.overflow = 'hidden';
         }
@@ -243,7 +255,68 @@
           }
         });
 
+        // Portal Modal Functions
+        // Valid User IDs for People Partner Portal
+        const validUserIDs = {
+          'M0H01C4': 'Michele Acevedo',
+          'L4PQSJE': 'Latanya Foster',
+          'C0H0Q44': 'Cassidy Hodges',
+          'K0H0FI9': 'Kirsten Johnston',
+          'C0M0L8N': 'Christina Manegold',
+          'K0R00J0': 'Kevin Reese',
+          'NSKI0MO': 'Nathan Skidmore',
+          'C0W06K5': 'Carey Webb',
+          'ALM00C2': 'Amanda Murphy',
+          'SCMASTE': 'Sondra Masters',
+          'KMCNEI2': 'Kellie McNeill'
+        };
 
+        function openPortalModal() {
+          const modal = document.getElementById('portalModal');
+          modal.style.display = 'block';
+          document.getElementById('userIdInput').value = '';
+          document.getElementById('errorMsg').textContent = '';
+          document.getElementById('userIdInput').focus();
+        }
+
+        function closePortalModal() {
+          const modal = document.getElementById('portalModal');
+          modal.style.display = 'none';
+        }
+
+        function verifyUserID() {
+          const userID = document.getElementById('userIdInput').value.trim().toUpperCase();
+          const errorMsg = document.getElementById('errorMsg');
+          
+          if (!userID) {
+            errorMsg.textContent = 'Please enter a User ID';
+            return;
+          }
+          
+          if (validUserIDs[userID]) {
+            window.location.href = 'people-partners-portal.html';
+          } else {
+            errorMsg.textContent = 'Invalid User ID. Access denied.';
+          }
+        }
+
+        // Close portal modal when clicking outside
+        window.addEventListener('click', function(event) {
+          const modal = document.getElementById('portalModal');
+          if (event.target === modal) {
+            closePortalModal();
+          }
+        });
+
+        // Allow Enter key to verify
+        document.addEventListener('keypress', function(event) {
+          if (event.key === 'Enter') {
+            const modal = document.getElementById('portalModal');
+            if (modal.style.display === 'block') {
+              verifyUserID();
+            }
+          }
+        });
     </script>
 
     <script src="script.js"></script>
