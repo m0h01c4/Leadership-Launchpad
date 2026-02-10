@@ -18,7 +18,10 @@
             <div class="header-title">
                 <h1>People Partner Portal</h1>
             </div>
-            <button class="portal-btn" onclick="window.location.href='index.html'">Back to Home</button>
+            <div style="display: flex; gap: 10px;">
+                <button class="portal-btn" onclick="signOut()" style="background-color: #FF8C42;">Sign Out</button>
+                <button class="portal-btn" onclick="window.location.href='index.html'">Back to Home</button>
+            </div>
         </div>
     </header>
 
@@ -288,8 +291,8 @@
           closeAuthModal();
           showPortalContent();
           
-          // Store the user ID in session storage for the session
-          sessionStorage.setItem('peoplePartnerUserId', userId);
+          // Note: We no longer store the user ID in sessionStorage
+          // This ensures the auth modal appears on every page refresh
         }
 
         function showPortalContent() {
@@ -306,19 +309,29 @@
           }
         }
 
+        function signOut() {
+          // Clear the session storage
+          sessionStorage.removeItem('peoplePartnerUserId');
+          
+          // Hide portal content
+          hidePortalContent();
+          
+          // Show auth modal
+          openAuthModal();
+          
+          // Clear the input field
+          const input = document.getElementById('userIdInput');
+          if (input) {
+            input.value = '';
+          }
+        }
+
         // Check authentication on page load
         window.addEventListener('DOMContentLoaded', function() {
-          // Check if user is already authenticated in this session
-          const userId = sessionStorage.getItem('peoplePartnerUserId');
-          
-          if (userId) {
-            // User is already authenticated - show content
-            showPortalContent();
-          } else {
-            // User not authenticated - hide content and show auth modal
-            hidePortalContent();
-            openAuthModal();
-          }
+          // Always require authentication on page load/refresh
+          // This ensures the user ID option appears anytime the page is refreshed
+          hidePortalContent();
+          openAuthModal();
         });
 
         // Image Modal Functions
