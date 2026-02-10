@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Portal Content - Hidden until authentication -->
+    <div id="portalContent" style="display: none;">
     <!-- Header -->
     <header class="header">
         <div class="header-container">
@@ -203,27 +205,32 @@
             </div>
         </div>
     </section>
+    </div>
+    <!-- End Portal Content -->
 
-    <!-- Welcome Popup Modal -->
-    <div id="welcomePopup" class="modal" role="dialog" aria-modal="true" aria-labelledby="welcomeModalTitle" style="display: none;">
-        <div class="modal-content" style="background-color: white; padding: 40px; border-radius: 12px; max-width: 600px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-            <span class="close" onclick="closeWelcomePopup()" onkeydown="if(event.key === 'Enter' || event.key === ' ') { event.preventDefault(); closeWelcomePopup(); }" role="button" aria-label="Close welcome modal" tabindex="0" style="position: absolute; top: 20px; right: 30px; font-size: 32px; cursor: pointer; color: #666;">&times;</span>
-            <h2 id="welcomeModalTitle" style="color: #5B7FFF; margin-bottom: 20px; text-align: center;">Welcome to the People Partner Portal!</h2>
-            <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 20px;">
-                Thank you for your commitment to developing our leadership talent. This portal provides you with:
+    <!-- User ID Authentication Modal -->
+    <div id="authModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="authModalTitle" style="display: none;">
+        <div class="modal-content" style="background-color: white; padding: 40px; border-radius: 12px; max-width: 450px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <h2 id="authModalTitle" style="color: #5B7FFF; margin-bottom: 20px; text-align: center;">People Partner Portal Sign In</h2>
+            <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 25px; text-align: center;">
+                Please enter your User ID to access the portal
             </p>
-            <ul style="font-size: 15px; line-height: 1.8; color: #333; margin-bottom: 25px; padding-left: 20px;">
-                <li><strong>Calendar & Important Dates</strong> - Stay on track with key leadership development milestones</li>
-                <li><strong>Resources & Templates</strong> - Access email templates, FAQs, and program materials</li>
-                <li><strong>Survey Access</strong> - Quick links to the Post Leader Academy Survey</li>
-                <li><strong>Data Hub</strong> - View training attendance, effectiveness ratings, and skill gap analysis</li>
-            </ul>
-            <p style="font-size: 15px; line-height: 1.6; color: #333; margin-bottom: 30px; text-align: center; font-style: italic;">
-                Your insights drive our leadership development strategy. Let's build exceptional leaders together!
-            </p>
+            <div style="margin-bottom: 25px;">
+                <label for="userIdInput" style="display: block; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 8px;">User ID:</label>
+                <input 
+                    type="text" 
+                    id="userIdInput" 
+                    placeholder="Enter your User ID" 
+                    style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 16px; box-sizing: border-box; transition: border-color 0.3s;"
+                    onfocus="this.style.borderColor='#5B7FFF'"
+                    onblur="this.style.borderColor='#ddd'"
+                    onkeypress="if(event.key === 'Enter') { validateUserId(); }"
+                />
+                <div id="errorMessage" style="color: #ff4444; font-size: 14px; margin-top: 8px; display: none;"></div>
+            </div>
             <div style="text-align: center;">
-                <button onclick="closeWelcomePopup()" style="padding: 12px 40px; background-color: #5B7FFF; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s;">
-                    Get Started
+                <button onclick="validateUserId()" style="padding: 12px 40px; background-color: #5B7FFF; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s; width: 100%;" onmouseover="this.style.backgroundColor='#4A6BE6'" onmouseout="this.style.backgroundColor='#5B7FFF'">
+                    Sign In
                 </button>
             </div>
         </div>
@@ -236,22 +243,82 @@
     </div>
 
     <script>
-        // Welcome Popup Functions
-        function openWelcomePopup() {
-          const modal = document.getElementById('welcomePopup');
+        // Authentication Functions
+        function openAuthModal() {
+          const modal = document.getElementById('authModal');
           modal.style.display = 'block';
           document.body.style.overflow = 'hidden';
+          // Focus on the input field
+          setTimeout(() => {
+            document.getElementById('userIdInput').focus();
+          }, 100);
         }
 
-        function closeWelcomePopup() {
-          const modal = document.getElementById('welcomePopup');
+        function closeAuthModal() {
+          const modal = document.getElementById('authModal');
           modal.style.display = 'none';
           document.body.style.overflow = 'auto';
         }
 
-        // Auto-open welcome popup on page load
+        function validateUserId() {
+          const input = document.getElementById('userIdInput');
+          const errorMessage = document.getElementById('errorMessage');
+          const userId = input.value.trim();
+          
+          // Clear previous error
+          errorMessage.style.display = 'none';
+          
+          // Basic validation - user ID should not be empty
+          if (!userId) {
+            errorMessage.textContent = 'Please enter a User ID';
+            errorMessage.style.display = 'block';
+            input.focus();
+            return;
+          }
+          
+          // Simple validation - check if user ID has at least 3 characters
+          if (userId.length < 3) {
+            errorMessage.textContent = 'User ID must be at least 3 characters';
+            errorMessage.style.display = 'block';
+            input.focus();
+            return;
+          }
+          
+          // Authentication successful - close modal and show content
+          closeAuthModal();
+          showPortalContent();
+          
+          // Store the user ID in session storage for the session
+          sessionStorage.setItem('peoplePartnerUserId', userId);
+        }
+
+        function showPortalContent() {
+          const content = document.getElementById('portalContent');
+          if (content) {
+            content.style.display = 'block';
+          }
+        }
+
+        function hidePortalContent() {
+          const content = document.getElementById('portalContent');
+          if (content) {
+            content.style.display = 'none';
+          }
+        }
+
+        // Check authentication on page load
         window.addEventListener('DOMContentLoaded', function() {
-          openWelcomePopup();
+          // Check if user is already authenticated in this session
+          const userId = sessionStorage.getItem('peoplePartnerUserId');
+          
+          if (userId) {
+            // User is already authenticated - show content
+            showPortalContent();
+          } else {
+            // User not authenticated - hide content and show auth modal
+            hidePortalContent();
+            openAuthModal();
+          }
         });
 
         // Image Modal Functions
@@ -272,28 +339,21 @@
         // Close modals when clicking outside
         window.addEventListener('click', function(event) {
           const imageModal = document.getElementById('imageModal');
-          const welcomeModal = document.getElementById('welcomePopup');
           
           if (event.target === imageModal) {
             closeImageModal();
           }
-          if (event.target === welcomeModal) {
-            closeWelcomePopup();
-          }
+          // Note: Auth modal cannot be closed by clicking outside
         });
 
         // Close modals with Escape key
         window.addEventListener('keydown', function(event) {
           if (event.key === 'Escape') {
             const imageModal = document.getElementById('imageModal');
-            const welcomeModal = document.getElementById('welcomePopup');
             
-            // Only close modals that are currently visible
+            // Only close image modal - auth modal stays open
             if (imageModal && imageModal.style.display === 'block') {
               closeImageModal();
-            }
-            if (welcomeModal && welcomeModal.style.display === 'block') {
-              closeWelcomePopup();
             }
           }
         });
